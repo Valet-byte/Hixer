@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/btn_project"
+        android:icon="@drawable/work_24"
+        android:title="Projects" />
+
+    <item
+        android:id="@+id/btn_idea"
+        android:icon="@drawable/idea_24"
+        android:title="Ideas" />
+
+    <item
+        android:id="@+id/btn_stats"
+        android:icon="@drawable/stats_24"
+        android:title="articles" />
+
+    <item
+        android:id="@+id/btn_person"
+        android:icon="@drawable/person_24"
+        android:title="articles" />
+</menu>
