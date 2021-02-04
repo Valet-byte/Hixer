@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+//PPPPPPPPPPPPPPPPPPPPPPPPPOMAAAAAAAA
         projectFragment = new ProjectsFragment();
         ideaFragment = new IdeaFragment();
         articleFragment = new ArticleFragment();
