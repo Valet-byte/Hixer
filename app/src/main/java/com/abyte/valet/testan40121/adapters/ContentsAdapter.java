@@ -15,7 +15,7 @@ import com.abyte.valet.testan40121.model.Content;
 
 public class ContentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private class MyHolder extends RecyclerView.ViewHolder{
+    private static class MyHolder extends RecyclerView.ViewHolder{
         final ImageView imageView;
         final TextView textView, tvTable;
 
@@ -27,8 +27,8 @@ public class ContentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    private Content content;
-    private LayoutInflater inflater;
+    private final Content content;
+    private final LayoutInflater inflater;
 
     public ContentsAdapter(Content content, Context context){
         this.content = content;
@@ -49,12 +49,7 @@ public class ContentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ((MyHolder)holder).tvTable.setText(content.chapters.get(position).getTable());
         ((MyHolder)holder).textView.setText(content.chapters.get(position).getInfo());
 
-        if (content.chapters.get(position).getImg() == R.drawable.ic1){
-
-        }
-        else {
-            ((MyHolder) holder).imageView.setImageResource(content.chapters.get(position).getImg());
-        }
+        if (content.chapters.get(position).getImg() != R.drawable.ic1) ((MyHolder) holder).imageView.setImageResource(content.chapters.get(position).getImg());
 
     }
 

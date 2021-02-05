@@ -9,22 +9,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.abyte.valet.testan40121.activitys.MainActivity;
 import com.abyte.valet.testan40121.R;
-import com.abyte.valet.testan40121.fragments.InfoFragment;
-import com.abyte.valet.testan40121.fragments.ProjectsFragment;
 import com.abyte.valet.testan40121.model.Content;
 
 import java.util.List;
 
 public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    private class MyViewHolder extends RecyclerView.ViewHolder {
+    private static class MyViewHolder extends RecyclerView.ViewHolder {
 
         final ImageView imageView;
         final TextView name, author;
@@ -37,14 +34,12 @@ public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    private List<Content> contents;
-    private Context context;
-    private LayoutInflater inflater;
-    private Fragment resFragment;
+    private final List<Content> contents;
+    private final LayoutInflater inflater;
+    private final Fragment resFragment;
 
     public ContentAdapter(Context context, List<Content> contents, Fragment fragment) {
         this.contents = contents;
-        this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.resFragment = fragment;
     }
@@ -65,16 +60,16 @@ public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ((MyViewHolder)holder).author.setText(content.getAuthor());
         ((MyViewHolder) holder).imageView.setImageResource(content.getImg());
 
-        ((MyViewHolder) holder).imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        ((MyViewHolder) holder).imageView.setOnClickListener((View v) -> {
+
                 Bundle bundle = new Bundle();
 
                 bundle.putSerializable(MainActivity.MSG_NAME, contents.get(position));
 
+                NavHostFragment.findNavController(resFragment).popBackStack(R.id.action_projectsFragment2_to_infoFragment, false);
                 NavHostFragment.findNavController(resFragment).navigate(R.id.action_projectsFragment2_to_infoFragment, bundle);
             }
-        });
+        );
     }
 
     @Override
