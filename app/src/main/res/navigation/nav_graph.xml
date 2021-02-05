@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_fraph"
+    app:startDestination="@id/projectsFragment2">
+    <fragment
+        android:id="@+id/projectsFragment2"
+        android:name="com.abyte.valet.testan40121.fragments.ProjectsFragment"
+        android:label="fragment_projects"
+        tools:layout="@layout/fragment_projects" >
+        <action
+            android:id="@+id/action_projectsFragment2_to_infoFragment"
+            app:destination="@id/infoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/articleFragment"
+        android:name="com.abyte.valet.testan40121.fragments.ArticleFragment"
+        android:label="fragment_article"
+        tools:layout="@layout/fragment_article" />
+    <fragment
+        android:id="@+id/personalFragment"
+        android:name="com.abyte.valet.testan40121.fragments.PersonalFragment"
+        android:label="fragment_personal"
+        tools:layout="@layout/fragment_personal" />
+    <fragment
+        android:id="@+id/ideaFragment2"
+        android:name="com.abyte.valet.testan40121.fragments.IdeaFragment"
+        android:label="fragment_idea"
+        tools:layout="@layout/fragment_idea" />
+    <fragment
+        android:id="@+id/infoFragment"
+        android:name="com.abyte.valet.testan40121.fragments.InfoFragment"
+        android:label="fragment_info"
+        tools:layout="@layout/fragment_info" >
+        <action
+            android:id="@+id/action_infoFragment_to_projectsFragment2"
+            app:destination="@id/projectsFragment2" />
+    </fragment>
+</navigation>

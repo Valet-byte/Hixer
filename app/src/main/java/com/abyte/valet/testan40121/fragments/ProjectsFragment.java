@@ -61,7 +61,7 @@ public class ProjectsFragment extends Fragment {
         layoutManager = new CustomLayoutManager(getContext());
 
         recyclerView.setLayoutManager(layoutManager);
-        contentAdapter = new ContentAdapter(getContext(), contents);
+        contentAdapter = new ContentAdapter(getContext(), contents, this);
         recyclerView.setAdapter(contentAdapter);
 
         simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {

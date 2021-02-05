@@ -3,4 +3,6 @@
     <string name="hello_idea_fragment">Тут пока ничего нет</string>
     <string name="hello_article_fragment">Тут тоже</string>
     <string name="hello_personal_fragment">Но это все разные фрагменты</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

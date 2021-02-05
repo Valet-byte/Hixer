@@ -10,11 +10,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.abyte.valet.testan40121.activitys.MainActivity;
 import com.abyte.valet.testan40121.R;
 import com.abyte.valet.testan40121.fragments.InfoFragment;
+import com.abyte.valet.testan40121.fragments.ProjectsFragment;
 import com.abyte.valet.testan40121.model.Content;
 
 import java.util.List;
@@ -37,11 +40,13 @@ public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private List<Content> contents;
     private Context context;
     private LayoutInflater inflater;
+    private Fragment resFragment;
 
-    public ContentAdapter(Context context, List<Content> contents) {
+    public ContentAdapter(Context context, List<Content> contents, Fragment fragment) {
         this.contents = contents;
         this.context = context;
         this.inflater = LayoutInflater.from(context);
+        this.resFragment = fragment;
     }
 
     @NonNull
@@ -63,15 +68,11 @@ public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ((MyViewHolder) holder).imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InfoFragment infoFragment = new InfoFragment();
-
                 Bundle bundle = new Bundle();
 
                 bundle.putSerializable(MainActivity.MSG_NAME, contents.get(position));
 
-                infoFragment.setArguments(bundle);
-
-                ((AppCompatActivity)context).getSupportFragmentManager().beginTransaction().add(R.id.project_fragment, infoFragment).addToBackStack(null).commit();
+                NavHostFragment.findNavController(resFragment).navigate(R.id.action_projectsFragment2_to_infoFragment, bundle);
             }
         });
     }

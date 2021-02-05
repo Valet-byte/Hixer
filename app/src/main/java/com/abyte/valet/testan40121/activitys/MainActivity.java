@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//PPPPPPPPPPPPPPPPPPPPPPPPPOMAAAAAAAA
         projectFragment = new ProjectsFragment();
         ideaFragment = new IdeaFragment();
         articleFragment = new ArticleFragment();
@@ -51,34 +51,28 @@ public class MainActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.my_tool_bar);
 
-        navigationView = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.project_fragment, projectFragment).commit();
+        navigationView = findViewById(R.id.bottomNavigationView);
 
         this.setSupportActionBar(toolbar);
 
-        navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
+        navigationView.setOnNavigationItemSelectedListener((MenuItem item) -> {
                 switch (item.getItemId()){
                     case R.id.btn_project:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.project_fragment, projectFragment).commit();
+                        NavHostFragment.findNavController(projectFragment).navigate(R.id.projectsFragment2);
                         break;
                     case R.id.btn_idea:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.project_fragment, ideaFragment).commit();
+                        NavHostFragment.findNavController(ideaFragment).navigate(R.id.ideaFragment2);
                         break;
                     case R.id.btn_stats:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.project_fragment, articleFragment).commit();
+                        NavHostFragment.findNavController(articleFragment).navigate(R.id.articleFragment);
                         break;
                     case R.id.btn_person:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.project_fragment, personFragment).commit();
+                        NavHostFragment.findNavController(personFragment).navigate(R.id.personalFragment);
 
                 }
-
                 return true;
             }
-        });
+        );
         
     }
 
