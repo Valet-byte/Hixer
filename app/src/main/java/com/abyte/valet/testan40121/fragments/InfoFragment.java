@@ -17,7 +17,11 @@ import com.abyte.valet.testan40121.R;
 import com.abyte.valet.testan40121.adapters.ContentsAdapter;
 import com.abyte.valet.testan40121.model.Content;
 
+import java.util.ArrayList;
+
 public class InfoFragment extends Fragment {
+
+    Bundle bundle;
 
 
     @Override
@@ -25,20 +29,22 @@ public class InfoFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_info, container, false);
 
-        Content content = (Content) (getArguments().getSerializable(MainActivity.MSG_NAME));
+        ArrayList<Content> contents = (ArrayList<Content>) getArguments().getSerializable(MainActivity.MSG_NAME);
 
         TextView textLogo = view.findViewById(R.id.logo_text);
-        ContentsAdapter contentsAdapter = new ContentsAdapter(content, getContext());
+        ContentsAdapter contentsAdapter = new ContentsAdapter(contents.get(0), getContext());
         RecyclerView recyclerView = view.findViewById(R.id.rv_list);
 
-
-        textLogo.setText(content.getInfo());
+        textLogo.setText(contents.get(0).getInfo());
         recyclerView.setAdapter(contentsAdapter);
 
         ImageView btnBack = view.findViewById(R.id.btn_back_add);
 
-        btnBack.setOnClickListener((View v) -> NavHostFragment.findNavController(this).navigate(R.id.action_infoFragment_to_projectsFragment2));
+        bundle = new Bundle();
+        bundle.putSerializable(MainActivity.MSG_NAME, contents);
+        int ID = getArguments().getInt("ID");
 
+        btnBack.setOnClickListener((View v) -> NavHostFragment.findNavController(this).navigate(ID, bundle));
 
         return view;
     }

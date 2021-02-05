@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_fraph"
-    app:startDestination="@id/projectsFragment2">
+    app:startDestination="@id/ideaFragment2">
     <fragment
         android:id="@+id/projectsFragment2"
         android:name="com.abyte.valet.testan40121.fragments.ProjectsFragment"
@@ -21,20 +21,41 @@
         <action
             android:id="@+id/action_infoFragment_to_projectsFragment2"
             app:destination="@id/projectsFragment2" />
+        <action
+            android:id="@+id/action_infoFragment_to_articleFragment2"
+            app:destination="@id/articleFragment2" />
+        <action
+            android:id="@+id/action_infoFragment_to_ideaFragment2"
+            app:destination="@id/ideaFragment2" />
+        <action
+            android:id="@+id/action_infoFragment_to_personalFragment2"
+            app:destination="@id/personalFragment2" />
     </fragment>
     <fragment
         android:id="@+id/articleFragment2"
         android:name="com.abyte.valet.testan40121.fragments.ArticleFragment"
         android:label="fragment_article"
-        tools:layout="@layout/fragment_article" />
+        tools:layout="@layout/fragment_article" >
+        <action
+            android:id="@+id/action_articleFragment2_to_infoFragment"
+            app:destination="@id/infoFragment" />
+    </fragment>
     <fragment
         android:id="@+id/ideaFragment2"
         android:name="com.abyte.valet.testan40121.fragments.IdeaFragment"
         android:label="fragment_idea"
-        tools:layout="@layout/fragment_idea" />
+        tools:layout="@layout/fragment_idea" >
+        <action
+            android:id="@+id/action_ideaFragment2_to_infoFragment"
+            app:destination="@id/infoFragment" />
+    </fragment>
     <fragment
         android:id="@+id/personalFragment2"
         android:name="com.abyte.valet.testan40121.fragments.PersonalFragment"
         android:label="fragment_personal"
-        tools:layout="@layout/fragment_personal" />
+        tools:layout="@layout/fragment_personal" >
+        <action
+            android:id="@+id/action_personalFragment2_to_infoFragment"
+            app:destination="@id/infoFragment" />
+    </fragment>
 </navigation>
