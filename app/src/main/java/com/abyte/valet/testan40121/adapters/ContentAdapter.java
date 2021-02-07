@@ -66,7 +66,9 @@ public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         Bundle bundle = new Bundle();
 
                         bundle.putSerializable(MainActivity.MSG_NAME, contents);
-                        bundle.putInt("ID", R.id.projectsFragment2);
+                        bundle.putInt(MainActivity.MSG_ID_BACK_FRAGMENT, R.id.projectsFragment2);
+                        bundle.putInt(MainActivity.MSG_POS, position);
+
                         NavHostFragment.findNavController(resFragment).navigate(R.id.action_projectsFragment2_to_infoFragment, bundle);
                     }
             );

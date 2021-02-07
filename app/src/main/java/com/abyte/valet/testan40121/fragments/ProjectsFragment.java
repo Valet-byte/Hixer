@@ -42,8 +42,8 @@ public class ProjectsFragment extends Fragment {
         CustomLayoutManager layoutManager = new CustomLayoutManager(getContext());
 
         recyclerView.setLayoutManager(layoutManager);
-        contentAdapter = new ContentAdapter(getContext(), contents, this);
-        recyclerView.setAdapter(contentAdapter);
+        if (contents != null){contentAdapter = new ContentAdapter(getContext(), contents, this);
+        recyclerView.setAdapter(contentAdapter);}
 
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override

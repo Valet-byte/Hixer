@@ -3,6 +3,7 @@ package com.abyte.valet.testan40121.activitys;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Bundle;
@@ -12,13 +13,15 @@ import com.abyte.valet.testan40121.R;
 import com.abyte.valet.testan40121.model.Content;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String MSG_NAME = "Msg";
+    public static final String MSG_POS = "Position";
+    public static final String MSG_ID_BACK_FRAGMENT = "ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         contents = new ArrayList<>();
 
-        contents.add(new Content(R.drawable.w,"Valet Byte", "Wifi jammer", (byte) 1));
+        contents.add(new Content(R.drawable.w,"Valet Byte", "Wifi jammer", (byte) 3));
 
         contents.get(0).addChapter("Приветствие", "Привет, это пробная статья в которой я хотел рассказать вам как сделать Wifi jammer, или Wifi глушилку, называйте как хотите." +
                 "В последнее время большую популярность приобрели недорогие и миниатюрные платы с поддержкой программной платформы NodeMCU. Они построены на модуле ESP8266, который реализует работу с Wi-Fi по стандарту 802.11b/g/n на частоте 2,4 ГГц. Сейчас встречается два варианта подобных плат: с чипом CP2102 американской компании Silicon Labs или с китайским CH340");
@@ -54,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(MSG_NAME, contents);
-
         NavHostFragment.findNavController(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment))).navigate(R.id.projectsFragment2, bundle);
 
         navigationView.setOnNavigationItemSelectedListener((MenuItem item) -> {
@@ -76,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         );
+
         
     }
 

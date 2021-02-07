@@ -35,14 +35,14 @@ public class InfoFragment extends Fragment {
         ContentsAdapter contentsAdapter = new ContentsAdapter(contents.get(0), getContext());
         RecyclerView recyclerView = view.findViewById(R.id.rv_list);
 
-        textLogo.setText(contents.get(0).getInfo());
+        textLogo.setText(contents.get(getArguments().getInt(MainActivity.MSG_POS)).getInfo());
         recyclerView.setAdapter(contentsAdapter);
 
         ImageView btnBack = view.findViewById(R.id.btn_back_add);
 
         bundle = new Bundle();
         bundle.putSerializable(MainActivity.MSG_NAME, contents);
-        int ID = getArguments().getInt("ID");
+        int ID = getArguments().getInt(MainActivity.MSG_ID_BACK_FRAGMENT);
 
         btnBack.setOnClickListener((View v) -> NavHostFragment.findNavController(this).navigate(ID, bundle));
 
