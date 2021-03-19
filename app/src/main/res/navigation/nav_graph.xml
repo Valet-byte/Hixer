@@ -63,4 +63,9 @@
             android:id="@+id/action_personalFragment2_to_infoFragment"
             app:destination="@id/infoFragment" />
     </fragment>
+    <activity
+        android:id="@+id/regActivity"
+        android:name="com.abyte.valet.testan40121.activitys.RegActivity"
+        android:label="activity_reg"
+        tools:layout="@layout/activity_reg" />
 </navigation>

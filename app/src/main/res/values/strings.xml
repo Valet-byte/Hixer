@@ -8,6 +8,8 @@
     <string name="btn_2">Ideas</string>
     <string name="btn_3">Articles</string>
     <string name="btn_4">Person</string>
+    <string name="password">password</string>
+    <string name="login">login</string>
 
 
 </resources>

@@ -17,8 +17,9 @@ import com.abyte.valet.testan40121.activitys.MainActivity;
 import com.abyte.valet.testan40121.R;
 import com.abyte.valet.testan40121.model.Content;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
@@ -35,14 +36,16 @@ public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    private final ArrayList<Content> contents;
+    private final LinkedList<Content> contents;
     private final LayoutInflater inflater;
     private final Fragment resFragment;
+    private final Iterator<Content> iterator;
 
-    public ContentAdapter(Context context, ArrayList<Content> contents, Fragment fragment) {
+    public ContentAdapter(Context context, LinkedList<Content> contents, Fragment fragment) {
         this.contents = contents;
         this.inflater = LayoutInflater.from(context);
         this.resFragment = fragment;
+        iterator = contents.descendingIterator();
     }
 
     @NonNull
@@ -55,24 +58,24 @@ public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        Content content = contents.get(position);
-        if (content.getKat() == 1) {
-            ((MyViewHolder) holder).name.setText(content.getInfo());
-            ((MyViewHolder) holder).author.setText(content.getAuthor());
-            ((MyViewHolder) holder).imageView.setImageResource(content.getImg());
+        Content content = iterator.next();
 
-            ((MyViewHolder) holder).imageView.setOnClickListener((View v) -> {
+        ((MyViewHolder) holder).name.setText(content.getInfo());
+        ((MyViewHolder) holder).author.setText(content.getAuthor());
+        ((MyViewHolder) holder).imageView.setImageResource(content.getImg());
 
-                        Bundle bundle = new Bundle();
+        ((MyViewHolder) holder).imageView.setOnClickListener((View v) -> {
 
-                        bundle.putSerializable(MainActivity.MSG_NAME, contents);
-                        bundle.putInt(MainActivity.MSG_ID_BACK_FRAGMENT, R.id.projectsFragment2);
-                        bundle.putInt(MainActivity.MSG_POS, position);
+                    Bundle bundle = new Bundle();
 
-                        NavHostFragment.findNavController(resFragment).navigate(R.id.action_projectsFragment2_to_infoFragment, bundle);
-                    }
-            );
-        }
+                    bundle.putSerializable(MainActivity.MSG_NAME, contents);
+                    bundle.putInt(MainActivity.MSG_ID_BACK_FRAGMENT, R.id.projectsFragment2);
+                    bundle.putInt(MainActivity.MSG_POS, position);
+
+                    NavHostFragment.findNavController(resFragment).navigate(R.id.action_projectsFragment2_to_infoFragment, bundle);
+                }
+        );
+
 
     }
 

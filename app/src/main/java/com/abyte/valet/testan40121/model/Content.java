@@ -11,22 +11,20 @@ public class Content implements Serializable {
 
     public List<Chapter> chapters;
 
-    private byte kat;
 
-    public Content(Integer img, String author, String info, List<Chapter> chapters, byte kat) {
+
+    public Content(Integer img, String author, String info, List<Chapter> chapters) {
         this.author = author;
         this.img = img;
         this.info = info;
         this.chapters = chapters;
-        this.kat = kat;
     }
 
-    public Content(Integer img, String author, String info, byte kat) {
+    public Content(Integer img, String author, String info) {
         this.author = author;
         this.img = img;
         this.info = info;
         this.chapters = new ArrayList<>();
-        this.kat = kat;
     }
 
     public String getInfo() {
@@ -57,7 +55,5 @@ public class Content implements Serializable {
         return author;
     }
 
-    public byte getKat() {
-        return kat;
-    }
+
 }

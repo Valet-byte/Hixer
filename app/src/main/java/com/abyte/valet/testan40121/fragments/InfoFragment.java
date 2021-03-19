@@ -18,6 +18,7 @@ import com.abyte.valet.testan40121.adapters.ContentsAdapter;
 import com.abyte.valet.testan40121.model.Content;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class InfoFragment extends Fragment {
 
@@ -29,7 +30,7 @@ public class InfoFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_info, container, false);
 
-        ArrayList<Content> contents = (ArrayList<Content>) getArguments().getSerializable(MainActivity.MSG_NAME);
+        LinkedList<Content> contents = (LinkedList<Content>) getArguments().getSerializable(MainActivity.MSG_NAME);
 
         TextView textLogo = view.findViewById(R.id.logo_text);
         ContentsAdapter contentsAdapter = new ContentsAdapter(contents.get(0), getContext());

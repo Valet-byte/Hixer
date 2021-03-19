@@ -18,14 +18,15 @@ import com.abyte.valet.testan40121.activitys.MainActivity;
 import com.abyte.valet.testan40121.model.Content;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final ArrayList<Content> contents;
+    private final LinkedList<Content> contents;
     private final LayoutInflater inflater;
     private final Fragment resFragment;
 
-    public ArticleAdapter(ArrayList<Content> contents, Context context, Fragment resFragment){
+    public ArticleAdapter(LinkedList<Content> contents, Context context, Fragment resFragment){
         this.resFragment = resFragment;
         inflater = LayoutInflater.from(context);
         this.contents = contents;
@@ -57,7 +58,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Content content = contents.get(position);
-        if (content.getKat() ==  2) {
+
             ((ArticleAdapter.MyViewHolder) holder).name.setText(content.getInfo());
             ((ArticleAdapter.MyViewHolder) holder).author.setText(content.getAuthor());
             ((ArticleAdapter.MyViewHolder) holder).imageView.setImageResource(content.getImg());
@@ -74,7 +75,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     }
             );
         }
-    }
+
 
     @Override
     public int getItemCount() {

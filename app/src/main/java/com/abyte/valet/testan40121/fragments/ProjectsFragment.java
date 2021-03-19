@@ -3,7 +3,6 @@ package com.abyte.valet.testan40121.fragments;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,25 +11,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.abyte.valet.testan40121.CustomLayoutManager.CustomLayoutManager;
 import com.abyte.valet.testan40121.R;
 import com.abyte.valet.testan40121.activitys.MainActivity;
 import com.abyte.valet.testan40121.adapters.ContentAdapter;
 import com.abyte.valet.testan40121.model.Content;
 
-import java.util.ArrayList;
-
+import java.util.LinkedList;
 
 public class ProjectsFragment extends Fragment {
 
     public ContentAdapter contentAdapter;
-    private ArrayList<Content> contents;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        contents = (ArrayList<Content>) getArguments().getSerializable(MainActivity.MSG_NAME);
-    }
+    private LinkedList<Content> contents;
+    private RecyclerView recyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,12 +30,9 @@ public class ProjectsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_projects, container, false);
 
-        RecyclerView recyclerView = view.findViewById(R.id.rv_content);
-        CustomLayoutManager layoutManager = new CustomLayoutManager(getContext());
+        recyclerView = view.findViewById(R.id.rv_content);
 
-        recyclerView.setLayoutManager(layoutManager);
-        if (contents != null){contentAdapter = new ContentAdapter(getContext(), contents, this);
-        recyclerView.setAdapter(contentAdapter);}
+
 
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
@@ -67,5 +56,13 @@ public class ProjectsFragment extends Fragment {
         return view;
     }
 
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        contents = (LinkedList<Content>) getArguments().getSerializable(MainActivity.MSG_NAME);
+        if (contents != null){
+            contentAdapter = new ContentAdapter(getContext(), contents, this);
+            recyclerView.setAdapter(contentAdapter);
+        }
+    }
 }

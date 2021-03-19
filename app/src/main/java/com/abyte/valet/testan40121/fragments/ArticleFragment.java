@@ -12,23 +12,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.abyte.valet.testan40121.CustomLayoutManager.CustomLayoutManager;
 import com.abyte.valet.testan40121.R;
 import com.abyte.valet.testan40121.activitys.MainActivity;
 import com.abyte.valet.testan40121.adapters.ArticleAdapter;
 import com.abyte.valet.testan40121.model.Content;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class ArticleFragment extends Fragment {
 
-    private ArrayList<Content> contents;
+    private LinkedList<Content> contents;
     private ArticleAdapter articleAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        contents = (ArrayList<Content>) getArguments().getSerializable(MainActivity.MSG_NAME);
+        contents = (LinkedList<Content>) getArguments().getSerializable(MainActivity.MSG_NAME);
     }
 
     @Override
@@ -41,7 +40,6 @@ public class ArticleFragment extends Fragment {
 
         RecyclerView recyclerView = view.findViewById(R.id.article_rv);
 
-        recyclerView.setLayoutManager(new CustomLayoutManager(getContext()));
         recyclerView.setAdapter(articleAdapter);
 
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {

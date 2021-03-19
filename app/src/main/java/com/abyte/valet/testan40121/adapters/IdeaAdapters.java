@@ -19,14 +19,15 @@ import com.abyte.valet.testan40121.activitys.MainActivity;
 import com.abyte.valet.testan40121.model.Content;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class IdeaAdapters extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    private final ArrayList<Content> contents;
+    private final LinkedList<Content> contents;
     private final LayoutInflater inflater;
     private final Fragment resFragment;
 
-    public IdeaAdapters(Context context, ArrayList<Content> contents, Fragment fragment) {
+    public IdeaAdapters(Context context, LinkedList<Content> contents, Fragment fragment) {
         this.contents = contents;
         this.inflater = LayoutInflater.from(context);
         this.resFragment = fragment;
@@ -59,24 +60,22 @@ public class IdeaAdapters extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         Content content = contents.get(position);
-        if (content.getKat() == 3){
-            ((MyViewHolder) holder).logo.setImageResource(content.getImg());
-            ((MyViewHolder) holder).author.setText(content.getAuthor());
-            ((MyViewHolder) holder).info.setText(content.getInfo());
 
-            ((MyViewHolder) holder).layout.setOnClickListener((View v) -> {
+        ((MyViewHolder) holder).logo.setImageResource(content.getImg());
+        ((MyViewHolder) holder).author.setText(content.getAuthor());
+        ((MyViewHolder) holder).info.setText(content.getInfo());
 
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(MainActivity.MSG_NAME, contents);
-                bundle.putInt(MainActivity.MSG_ID_BACK_FRAGMENT, R.id.ideaFragment2);
-                bundle.putInt(MainActivity.MSG_POS, position);
+        ((MyViewHolder) holder).layout.setOnClickListener((View v) -> {
 
-                NavHostFragment.findNavController(resFragment).popBackStack(R.id.infoFragment, true);
-                NavHostFragment.findNavController(resFragment).navigate(R.id.infoFragment, bundle);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(MainActivity.MSG_NAME, contents);
+            bundle.putInt(MainActivity.MSG_ID_BACK_FRAGMENT, R.id.ideaFragment2);
+            bundle.putInt(MainActivity.MSG_POS, position);
 
-            });
+            NavHostFragment.findNavController(resFragment).popBackStack(R.id.infoFragment, true);
+            NavHostFragment.findNavController(resFragment).navigate(R.id.infoFragment, bundle);
 
-        }
+        });
 
     }
 
