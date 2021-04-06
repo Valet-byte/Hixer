@@ -31,6 +31,12 @@ public class Person implements Serializable {
         this.password = p.getPassword();
     }
 
+    public void cloneAndArguments(Person p, Long id) {
+        this.id = id;
+        this.name = p.getName();
+        this.password = p.getPassword();
+    }
+
     @Override
     public String toString() {
         return "Person{" +

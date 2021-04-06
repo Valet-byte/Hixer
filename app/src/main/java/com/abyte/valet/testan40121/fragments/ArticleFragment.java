@@ -15,7 +15,11 @@ import android.view.ViewGroup;
 import com.abyte.valet.testan40121.R;
 import com.abyte.valet.testan40121.activitys.MainActivity;
 import com.abyte.valet.testan40121.adapters.ArticleAdapter;
+import com.abyte.valet.testan40121.cl_se.RetrofitClient;
 import com.abyte.valet.testan40121.model.Content;
+import com.abyte.valet.testan40121.model.Projects.Project;
+import com.abyte.valet.testan40121.model.artcles.Article;
+import com.abyte.valet.testan40121.model.person.Person;
 
 import java.util.LinkedList;
 
@@ -24,10 +28,18 @@ public class ArticleFragment extends Fragment {
     private LinkedList<Content> contents;
     private ArticleAdapter articleAdapter;
 
+    public static Fragment getInstance(LinkedList<Article> articles) {
+        Bundle b = new Bundle();
+        ProjectsFragment fragment = new ProjectsFragment();
+        b.putSerializable(MainActivity.MSG_NAME, articles);
+        fragment.setArguments(b);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        contents = (LinkedList<Content>) getArguments().getSerializable(MainActivity.MSG_NAME);
+        contents = getContents(((MainActivity) getActivity()).person);
     }
 
     @Override
@@ -42,26 +54,10 @@ public class ArticleFragment extends Fragment {
 
         recyclerView.setAdapter(articleAdapter);
 
-        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int pos = viewHolder.getAdapterPosition();
-
-                contents.remove(pos);
-
-                articleAdapter.notifyDataSetChanged();
-            }
-        };
-
-        ItemTouchHelper touchHelper = new ItemTouchHelper(simpleCallback);
-        touchHelper.attachToRecyclerView(recyclerView);
-
-
         return view;
+    }
+
+    private LinkedList<Content> getContents(Person p){
+        return RetrofitClient.getContentByUser(p, 1);
     }
 }

@@ -10,13 +10,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.abyte.valet.testan40121.R;
 import com.abyte.valet.testan40121.activitys.MainActivity;
 import com.abyte.valet.testan40121.adapters.ContentAdapter;
+import com.abyte.valet.testan40121.cl_se.RetrofitClient;
 import com.abyte.valet.testan40121.model.Content;
+import com.abyte.valet.testan40121.model.Projects.Project;
+import com.abyte.valet.testan40121.model.person.Person;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class ProjectsFragment extends Fragment {
 
@@ -32,37 +37,28 @@ public class ProjectsFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.rv_content);
 
-
-
-        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int pos = viewHolder.getAdapterPosition();
-
-                contents.remove(pos);
-
-                contentAdapter.notifyDataSetChanged();
-            }
-        };
-
-        ItemTouchHelper touchHelper = new ItemTouchHelper(simpleCallback);
-        touchHelper.attachToRecyclerView(recyclerView);
-
         return view;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        contents = (LinkedList<Content>) getArguments().getSerializable(MainActivity.MSG_NAME);
+        contents = getContents(((MainActivity) getActivity()).person);
         if (contents != null){
             contentAdapter = new ContentAdapter(getContext(), contents, this);
             recyclerView.setAdapter(contentAdapter);
         }
+    }
+
+    public static ProjectsFragment getInstance(LinkedList<Project> projects){
+        Bundle b = new Bundle();
+        ProjectsFragment fragment = new ProjectsFragment();
+        b.putSerializable(MainActivity.MSG_NAME, projects);
+        fragment.setArguments(b);
+        return fragment;
+    }
+
+    private LinkedList<Content> getContents(Person p){
+        return RetrofitClient.getContentByUser(p, 2);
     }
 }

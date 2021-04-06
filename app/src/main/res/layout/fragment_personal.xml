@@ -10,6 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/my_orange"
         android:orientation="horizontal">
 
         <ImageView
@@ -43,17 +44,17 @@
     </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/nav_view_person_contents"
+        android:id="@+id/nav_view_person"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/my_orange"
-        app:menu="@menu/menu_personal_contents"
-        app:itemTextColor="@color/white"
-        app:itemRippleColor="@color/white"
-        />
+        app:menu="@menu/menu_personal_contents"/>
 
-    <androidx.fragment.app.FragmentContainerView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_person_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
 
 </LinearLayout>

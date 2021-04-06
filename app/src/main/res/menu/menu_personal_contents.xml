@@ -5,17 +5,14 @@
 
         <item
             android:id="@+id/projectsFragment2"
-            android:icon="@drawable/work_24"
             android:title="@string/btn_1" />
 
         <item
             android:id="@+id/ideaFragment2"
-            android:icon="@drawable/idea_24"
             android:title="@string/btn_2" />
 
         <item
             android:id="@+id/articleFragment2"
-            android:icon="@drawable/stats_24"
             android:title="@string/btn_3" />
 
 

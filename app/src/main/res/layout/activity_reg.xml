@@ -7,33 +7,42 @@
     tools:context=".activitys.RegActivity"
     android:background="@color/my_orange">
 
-    <EditText
-        android:id="@+id/et_login"
-        android:layout_width="160dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:gravity="center"
-        android:hint="@string/login"
-        android:layout_marginBottom="36dp"
-        app:layout_constraintBottom_toTopOf="@+id/et_password"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        android:importantForAutofill="no" />
+        app:layout_constraintBottom_toTopOf="@+id/textInputLayout"
+        android:layout_margin="10dp"
+        app:passwordToggleContentDescription="description">
 
-    <EditText
-        android:id="@+id/et_password"
-        android:layout_width="160dp"
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        android:gravity="center"
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:inputType="textEmailAddress"
+            android:id="@+id/et_login"
+            android:hint="Логин"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="28dp"
+        android:layout_margin="10dp"
         app:layout_constraintBottom_toTopOf="@+id/appCompatButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        android:autofillHints="" />
+        app:passwordToggleContentDescription="description"
+        app:passwordToggleEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/et_password"
+            android:background="@color/white"
+            android:hint="Пароль"
+            android:inputType="textPassword" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/appCompatButton"

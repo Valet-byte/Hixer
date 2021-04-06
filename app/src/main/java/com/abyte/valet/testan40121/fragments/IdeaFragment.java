@@ -16,10 +16,15 @@ import com.abyte.valet.testan40121.R;
 import com.abyte.valet.testan40121.activitys.MainActivity;
 import com.abyte.valet.testan40121.adapters.ContentAdapter;
 import com.abyte.valet.testan40121.adapters.IdeaAdapters;
+import com.abyte.valet.testan40121.cl_se.RetrofitClient;
 import com.abyte.valet.testan40121.model.Content;
+import com.abyte.valet.testan40121.model.Projects.Project;
+import com.abyte.valet.testan40121.model.ideas.Idea;
+import com.abyte.valet.testan40121.model.person.Person;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 public class IdeaFragment extends Fragment {
 
@@ -30,7 +35,7 @@ public class IdeaFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        contents = (LinkedList<Content>) getArguments().getSerializable(MainActivity.MSG_NAME);
+        contents = getContents(((MainActivity)getActivity()).person);
     }
 
     @Override
@@ -43,25 +48,18 @@ public class IdeaFragment extends Fragment {
         ideaAdapters = new IdeaAdapters(getContext(), contents, this);
         recyclerView.setAdapter(ideaAdapters);
 
-        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int pos = viewHolder.getAdapterPosition();
-
-                contents.remove(pos);
-
-                ideaAdapters.notifyDataSetChanged();
-            }
-        };
-
-        ItemTouchHelper touchHelper = new ItemTouchHelper(simpleCallback);
-        touchHelper.attachToRecyclerView(recyclerView);
-
         return view;
+    }
+
+    public static IdeaFragment getInstance(LinkedList<Idea> ideas){
+        Bundle b = new Bundle();
+        IdeaFragment fragment = new IdeaFragment();
+        b.putSerializable(MainActivity.MSG_NAME, ideas);
+        fragment.setArguments(b);
+        return fragment;
+    }
+
+    private LinkedList<Content> getContents(Person p){
+        return RetrofitClient.getContentByUser(p, 3);
     }
 }

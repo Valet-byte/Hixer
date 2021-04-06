@@ -17,7 +17,7 @@ public class PersonDB extends SQLiteOpenHelper {
     public static final String DB_NAME = "persons.db";
 
     public static final String DB_CREATED = "CREATE TABLE " + Contracts.PersonContract.TABLE_NAME +
-            " (" + Contracts.PersonContract.COLUMN_ID +  " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            " (" + Contracts.PersonContract.COLUMN_ID +  " INTEGER PRIMARY KEY," +
             Contracts.PersonContract.COLUMN_NAME + " TEXT NOT NULL," +
             Contracts.PersonContract.COLUMN_PASSWORD + " TEXT NOT NULL)";
 
@@ -48,6 +48,7 @@ public class PersonDB extends SQLiteOpenHelper {
             ContentValues cv = new ContentValues();
             cv.put(Contracts.PersonContract.COLUMN_NAME, person.getName());
             cv.put(Contracts.PersonContract.COLUMN_PASSWORD, person.getPassword());
+            cv.put(Contracts.PersonContract.COLUMN_ID, person.getId());
 
             db.delete(Contracts.PersonContract.TABLE_NAME, null, null);
             db.insert(Contracts.PersonContract.TABLE_NAME, null, cv);

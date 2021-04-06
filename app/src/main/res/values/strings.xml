@@ -11,5 +11,7 @@
     <string name="password">password</string>
     <string name="login">login</string>
 
+    <string name="tab_text_1">tab_text_1</string>
+    <string name="tab_text_2">tab_text_2</string>
 
 </resources>

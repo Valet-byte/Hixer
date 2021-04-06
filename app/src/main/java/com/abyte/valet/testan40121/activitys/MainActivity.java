@@ -3,20 +3,28 @@ package com.abyte.valet.testan40121.activitys;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
 import android.util.Log;
 
 import com.abyte.valet.testan40121.R;
 import com.abyte.valet.testan40121.db.PersonDB;
+import com.abyte.valet.testan40121.fragments.ArticleFragment;
+import com.abyte.valet.testan40121.fragments.IdeaFragment;
+import com.abyte.valet.testan40121.fragments.PersonalFragment;
+import com.abyte.valet.testan40121.fragments.ProjectsFragment;
 import com.abyte.valet.testan40121.model.Projects.Project;
 import com.abyte.valet.testan40121.model.artcles.Article;
 import com.abyte.valet.testan40121.model.ideas.Idea;
 import com.abyte.valet.testan40121.model.person.Person;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
 
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Objects;
 
@@ -30,7 +38,13 @@ public class MainActivity extends AppCompatActivity {
     private LinkedList<Article> articles;
     private LinkedList<Project> projects ;
     private LinkedList<Idea> ideas ;
-    private Person person;
+    public static Person person;
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(R_CODE);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +56,7 @@ public class MainActivity extends AppCompatActivity {
         this.setSupportActionBar(toolbar);
         BottomNavigationView navigationView = findViewById(R.id.bottomNavigationView);
 
-        person = (Person) getIntent().getSerializableExtra(MSG_NAME);
-        Log.i("MyTag", person.toString());
-        (new PersonDB(this)).addPerson(person);
-
+        person =  (Person) getIntent().getSerializableExtra(MSG_NAME);
         articles = new LinkedList<>();
 
         articles.add(new Article(R.drawable.w, "Valet Byte", "Wifi jammer"));
@@ -117,16 +128,19 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.projectsFragment2:
                             bundle.clear();
                             bundle.putSerializable(MSG_NAME, projects);
+                            NavHostFragment.findNavController(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment))).popBackStack();
                             NavHostFragment.findNavController(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment))).navigate(R.id.projectsFragment2, bundle);
                             break;
                         case R.id.ideaFragment2:
                             bundle.clear();
                             bundle.putSerializable(MSG_NAME, ideas);
+                            NavHostFragment.findNavController(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment))).popBackStack();
                             NavHostFragment.findNavController(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment))).navigate(R.id.ideaFragment2, bundle);
                             break;
                         case R.id.articleFragment2:
                             bundle.clear();
                             bundle.putSerializable(MSG_NAME, articles);
+                            NavHostFragment.findNavController(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment))).popBackStack();
                             NavHostFragment.findNavController(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment))).navigate(R.id.articleFragment2, bundle);
                             break;
                         case R.id.personalFragment2:
@@ -139,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
         );
+
 
     }
 }
