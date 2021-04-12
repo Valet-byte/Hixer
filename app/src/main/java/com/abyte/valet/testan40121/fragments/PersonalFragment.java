@@ -1,5 +1,6 @@
 package com.abyte.valet.testan40121.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.abyte.valet.testan40121.activitys.AddActivity;
 import com.abyte.valet.testan40121.model.Content;
 import com.abyte.valet.testan40121.model.Projects.Project;
 import com.google.android.material.tabs.TabLayout;
@@ -37,7 +39,7 @@ public class PersonalFragment extends Fragment {
         Log.i("MyTag", "onCreateView");
         View view = inflater.inflate(R.layout.fragment_personal, container, false);
         TextView login = view.findViewById(R.id.tv_nik);
-        p = (Person) getArguments().getSerializable(MainActivity.MSG_NAME);
+        p = ((MainActivity)getActivity()).person;
         login.setText(p.getName());
 
         view.findViewById(R.id.btn_out).setOnClickListener(v ->{
@@ -45,6 +47,11 @@ public class PersonalFragment extends Fragment {
             db.deletedPerson();
             requireActivity().setResult(2);
             getActivity().finish();
+        });
+
+        view.findViewById(R.id.btn_add).setOnClickListener(v -> {
+            Intent i = new Intent(getActivity(), AddActivity.class);
+            startActivity(i);
         });
 
         return view;

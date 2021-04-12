@@ -43,7 +43,7 @@
 
     </LinearLayout>
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+<!--    <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view_person"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -54,7 +54,16 @@
         android:id="@+id/rv_person_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>-->
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_gravity="end|bottom"
+        app:rippleColor="@color/my_orange"
+        android:src="@drawable/ic_add"/>
 
 
 </LinearLayout>

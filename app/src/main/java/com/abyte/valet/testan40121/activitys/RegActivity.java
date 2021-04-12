@@ -56,10 +56,7 @@ public class RegActivity extends AppCompatActivity {
         findViewById(R.id.appCompatButton).setOnClickListener(v -> {
             if (!login.getText().toString().isEmpty() &&
                     !password.getText().toString().isEmpty()) {
-Person person = new Person(330L ,login.getText().toString(), password.getText().toString());
                 Intent i = new Intent(RegActivity.this, MainActivity.class);
-                i.putExtra(MainActivity.MSG_NAME, person);
-                startActivityForResult(i, MainActivity.R_CODE);
                 StringBuilder builder = new StringBuilder();
 
                 byte[] a = digest.digest(password.getText().toString().getBytes());
@@ -73,10 +70,12 @@ Person person = new Person(330L ,login.getText().toString(), password.getText().
                     public void onResponse(@NonNull Call<Person> call, @NonNull Response<Person> response) {
                         runOnUiThread(() -> {
                             Person person = response.body();
-                            db.addPerson(person);
-                            Intent i = new Intent(RegActivity.this, MainActivity.class);
-                            i.putExtra(MainActivity.MSG_NAME, person);
-                            startActivityForResult(i, MainActivity.R_CODE);
+                            if (person != null) {
+                                db.addPerson(person);
+                                Intent i = new Intent(RegActivity.this, MainActivity.class);
+                                i.putExtra(MainActivity.MSG_NAME, person);
+                                startActivityForResult(i, MainActivity.R_CODE);
+                            }
                         });
                     }
 

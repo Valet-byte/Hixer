@@ -22,6 +22,7 @@ import com.abyte.valet.testan40121.model.person.Person;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class ProjectsFragment extends Fragment {
 

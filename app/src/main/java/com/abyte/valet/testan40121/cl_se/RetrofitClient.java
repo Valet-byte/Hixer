@@ -1,7 +1,6 @@
 package com.abyte.valet.testan40121.cl_se;
 
 import com.abyte.valet.testan40121.R;
-import com.abyte.valet.testan40121.cl_se.ClientAPI;
 import com.abyte.valet.testan40121.model.Content;
 import com.abyte.valet.testan40121.model.Projects.Project;
 import com.abyte.valet.testan40121.model.artcles.Article;
@@ -9,9 +8,10 @@ import com.abyte.valet.testan40121.model.ideas.Idea;
 import com.abyte.valet.testan40121.model.person.Person;
 
 import java.util.LinkedList;
-import java.util.List;
 
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -22,16 +22,23 @@ public class RetrofitClient {
 
     public RetrofitClient() {
         OkHttpClient client = new OkHttpClient.Builder().build();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://192.168.1.106:8080")
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://192.168.1.107:8080")
                 .addConverterFactory(GsonConverterFactory.create()).client(client).build();
 
         clientAPI = retrofit.create(ClientAPI.class);
 
     }
 
-    public void findUser(Callback<Person> callback,
-                         String name, String password){ clientAPI.findPersons(name, password).enqueue(callback);
+    public static void findUser(Callback<Person> callback,
+                          String name, String password){ clientAPI.findPersons(name, password).enqueue(callback);
     }
+
+    public static void uploadPhotos(Callback<Void> callback,
+                                    RequestBody body,
+                                    String[] name,
+                                    String[] texts,
+                                    MultipartBody.Part... part){clientAPI.uploadPhoto(body, name, texts, part).enqueue(callback);}
+
     public static LinkedList<Content> getContentByUser(Person p, int type){
 
         switch (type){

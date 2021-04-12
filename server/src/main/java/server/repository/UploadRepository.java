@@ -1,4 +1,4 @@
-package repository;
+package server.repository;
 
 import org.springframework.stereotype.Repository;
 

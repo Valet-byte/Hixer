@@ -22,7 +22,6 @@ public class PersonContentFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_person_content, container, false);
-
         ((TextView) view.findViewById(R.id.tv_person_content)).setText(text.toString());
 
         return view;

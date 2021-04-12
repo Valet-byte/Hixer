@@ -2,12 +2,12 @@ package server.model;
 
 import java.io.Serializable;
 
-public class User implements Serializable {
+public class Person implements Serializable {
     private final Long id;
     private final String name;
     private final String password;
 
-    public User(Long id, String name, String password) {
+    public Person(Long id, String name, String password) {
         this.id = id;
         this.name = name;
         this.password = password;
@@ -39,7 +39,7 @@ public class User implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        User person = (User) o;
+        Person person = (Person) o;
 
         if (id != null ? !id.equals(person.id) : person.id != null) return false;
         if (name != null ? !name.equals(person.name) : person.name != null) return false;

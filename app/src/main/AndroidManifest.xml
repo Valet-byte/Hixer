@@ -3,11 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.abyte.valet.testan40121">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -15,6 +16,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TestAn40121"
         tools:targetApi="m">
+        <activity
+            android:name=".activitys.AddActivity"
+            android:label="@string/title_activity_add"
+            android:theme="@style/Theme.TestAn40121.NoActionBar">
+        </activity>
         <activity android:name=".activitys.RegActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,4 +31,5 @@
         <activity android:name=".activitys.MainActivity">
         </activity>
     </application>
+
 </manifest>
