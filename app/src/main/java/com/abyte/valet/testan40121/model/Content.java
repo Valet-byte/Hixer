@@ -11,8 +11,6 @@ public class Content implements Serializable {
 
     public List<Chapter> chapters;
 
-
-
     public Content(Integer img, String author, String info, List<Chapter> chapters) {
         this.author = author;
         this.img = img;

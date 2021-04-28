@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,28 +8,30 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/my_orange"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:layout_width="60dp"
-            android:layout_height="60dp"/>
+            android:layout_height="60dp" />
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="8"
             android:layout_height="wrap_content"
+            android:layout_weight="8"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tv_nik"
-                android:gravity="center"
-                android:textStyle="bold"
-                android:textColor="@color/black"
                 android:layout_width="match_parent"
-                android:layout_height="25dp"/>
+                android:layout_height="25dp"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
 
 
         </LinearLayout>
@@ -37,9 +39,9 @@
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_out"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
-            android:text="out"/>
+            android:layout_weight="1"
+            android:text="out" />
 
     </LinearLayout>
 
@@ -48,22 +50,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/my_orange"
-        app:menu="@menu/menu_personal_contents"/>
+        app:menu="@menu/menu_personal_contents"/>-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_person_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>-->
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
         android:layout_gravity="end|bottom"
-        app:rippleColor="@color/my_orange"
-        android:src="@drawable/ic_add"/>
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:rippleColor="@color/my_orange" />
 
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

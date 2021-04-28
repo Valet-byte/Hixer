@@ -1,113 +1,121 @@
 package com.abyte.valet.testan40121.cl_se;
 
+import android.util.Log;
+
 import com.abyte.valet.testan40121.R;
+import com.abyte.valet.testan40121.fragments.PersonalFragment;
 import com.abyte.valet.testan40121.model.Content;
 import com.abyte.valet.testan40121.model.Projects.Project;
 import com.abyte.valet.testan40121.model.artcles.Article;
 import com.abyte.valet.testan40121.model.ideas.Idea;
 import com.abyte.valet.testan40121.model.person.Person;
+import com.abyte.valet.testan40121.model.server_model.ServerModel;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
+import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
     private static ClientAPI clientAPI;
+    public static final LinkedList<ServerModel> projects = new LinkedList<>(),
+    ideas = new LinkedList<>(), stats = new LinkedList<>();
 
-    public RetrofitClient() {
+    private RetrofitClient() {
         OkHttpClient client = new OkHttpClient.Builder().build();
         Retrofit retrofit = new Retrofit.Builder().baseUrl("http://192.168.1.107:8080")
                 .addConverterFactory(GsonConverterFactory.create()).client(client).build();
-
         clientAPI = retrofit.create(ClientAPI.class);
-
     }
 
     public static void findUser(Callback<Person> callback,
-                          String name, String password){ clientAPI.findPersons(name, password).enqueue(callback);
+                          String name, String password){
+        if (clientAPI == null) { new RetrofitClient(); }
+        clientAPI.findPersons(name, password).enqueue(callback);
     }
 
     public static void uploadPhotos(Callback<Void> callback,
-                                    RequestBody body,
-                                    String[] name,
-                                    String[] texts,
-                                    MultipartBody.Part... part){clientAPI.uploadPhoto(body, name, texts, part).enqueue(callback);}
+                                    RequestBody description,
+                                    ServerModel[] models,
+                                    MultipartBody.Part... parts){
 
-    public static LinkedList<Content> getContentByUser(Person p, int type){
+        if (clientAPI == null) { new RetrofitClient(); }
+        clientAPI.uploadPhoto(description, models, parts).enqueue(callback);}
 
-        switch (type){
-            case 1:
-                LinkedList<Content> articles = new LinkedList<>();
+    public static void getContentByUser(Person p, int type, LinkedList<ServerModel> models){
+        if (clientAPI == null) { new RetrofitClient(); }
+        clientAPI.getModelsByID(p.getId(), type).enqueue(new Callback<LinkedList<ServerModel>>() {
+            @Override
+            public void onResponse(Call<LinkedList<ServerModel>> call, Response<LinkedList<ServerModel>> response) {
+                if (response.code()==200){
+                    models.addAll(response.body());
+                    new Thread(() ->{
+                        for (ServerModel model : models) {
+                            try {
+                                model.setBitmap(clientAPI.getPhoto(model.getPhoto()).execute().body().byteStream());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
 
-                articles.add(new Article(R.drawable.w, "Valet Byte", "Wifi jammer"));
-                articles.get(0).addChapter("Приветствие", "Привет, это пробная статья в которой я хотел рассказать вам как сделать Wifi jammer, или Wifi глушилку, называйте как хотите." +
-                        "В последнее время большую популярность приобрели недорогие и миниатюрные платы с поддержкой программной платформы NodeMCU. Они построены на модуле ESP8266, который реализует работу с Wi-Fi по стандарту 802.11b/g/n на частоте 2,4 ГГц. Сейчас встречается два варианта подобных плат: с чипом CP2102 американской компании Silicon Labs или с китайским CH340");
+                        Log.i("myTag", "onResponse: " + Arrays.toString(models.toArray()));
+                    }).start();
 
-                articles.get(0).addChapter("Приветствие", "Привет, это пробная статья в которой я хотел рассказать вам как сделать Wifi jammer, или Wifi глушилку, называйте как хотите." +
-                        "В последнее время большую популярность приобрели недорогие и миниатюрные платы с поддержкой программной платформы NodeMCU. Они построены на модуле ESP8266, который реализует работу с Wi-Fi по стандарту 802.11b/g/n на частоте 2,4 ГГц. Сейчас встречается два варианта подобных плат: с чипом CP2102 американской компании Silicon Labs или с китайским CH340");
+                }
+            }
 
-                articles.get(0).addChapter("Предупреждение", "Все рассмотренные советы настоятельно рекомендуется использовать только в образовательных целях. Блокировка передачи данных и использование рассмотренных средств может преследоваться по закону.В репозитории на GitHub ты можешь выбрать версию для конкретной платы." );
-                articles.get(0).addChapter("Инструкция", R.drawable.d,
-                        "https://github.com/SpacehuhnTech/esp8266_deauther/releases" +
-                                " Файлы с расширением bin — это скомпилированные скетчи. Их нужно устанавливать на плату через специальный загрузчик. Но если захочешь, то в архивах с исходным кодом ты отыщешь библиотеки и скетчи, которые можно поставить через Arduino IDE.");
-                articles.get(0).addChapter(" ", R.drawable.b, "Загрузка .bin\n" +
-                        "Если ты выбрал вариант с загрузкой бинарника, то для начала запускай программу NodeMCU Flasher. Скачать ее можно в репозитории NodeMCU. Устанавливаем драйверы для CP2102 либо для CH340. После этого подключаем плату к компьютеру, открываем программу NodeMCU Flasher, выбираем порт COM в диспетчере устройств в разделе «Порты (COM и LPT)». Теперь переходим во вкладку Config, жмем на шестеренку и выбираем скачанный файл .bin. После добавления файла в строке слева появится его путь. Переходи во вкладку Operation и нажимай на Flash — прошивка после этого будет загружена в плату.");
+            @Override
+            public void onFailure(Call<LinkedList<ServerModel>> call, Throwable t) {
 
-                articles.get(0).addChapter("Практика", "После включения плата создаст точку доступа. Подключайся к ней и заходи по адресу 192.168.4.1 или deauth.me. Ты попадешь в конфигуратор и увидишь предупреждение." +
-                        "В разделе конфигурации в строке LANG указываем ru для включения русского языка в веб-интерфейсе. Чтобы настройки вступили в силу, нужно нажать на «Сохранить» и перезагрузить устройство. Теперь оно готово к работе, можно начинать портить жизнь соседям." +
-                        "Если в разделе сканирования нажать Scan APs, то глушилка находит все точки доступа Wi-Fi. Выбираешь одну или несколько сетей, и можно переходить в раздел атак. Режим Deauth отключает все устройства от выбранной сети. Режим Beacon позволяет создавать одновременно до 60 точек доступа." );
+            }
+        });
+    }
 
-                return articles;
-            case 2:
-                LinkedList<Content> projects = new LinkedList<>();
+    public static void startDownload(Long id) {
+        if (clientAPI == null) { new RetrofitClient(); }
+        new Thread(()->{
+            try {
+                projects.addAll(clientAPI.getModelsByID(id, 1).execute().body());
 
-                projects.add(new Project(R.drawable.w, "Valet Byte", "Wifi jammer"));
-                projects.get(0).addChapter("Приветствие", "Привет, это пробная статья в которой я хотел рассказать вам как сделать Wifi jammer, или Wifi глушилку, называйте как хотите." +
-                        "В последнее время большую популярность приобрели недорогие и миниатюрные платы с поддержкой программной платформы NodeMCU. Они построены на модуле ESP8266, который реализует работу с Wi-Fi по стандарту 802.11b/g/n на частоте 2,4 ГГц. Сейчас встречается два варианта подобных плат: с чипом CP2102 американской компании Silicon Labs или с китайским CH340");
+                for (ServerModel project : projects) {
+                    project.setBitmap(clientAPI.getPhoto(project.getPhoto()).execute().body().byteStream());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+        new Thread(()->{
+            try {
+                ideas.addAll(clientAPI.getModelsByID(id, 3).execute().body());
 
-                projects.get(0).addChapter("Приветствие", "Привет, это пробная статья в которой я хотел рассказать вам как сделать Wifi jammer, или Wifi глушилку, называйте как хотите." +
-                        "В последнее время большую популярность приобрели недорогие и миниатюрные платы с поддержкой программной платформы NodeMCU. Они построены на модуле ESP8266, который реализует работу с Wi-Fi по стандарту 802.11b/g/n на частоте 2,4 ГГц. Сейчас встречается два варианта подобных плат: с чипом CP2102 американской компании Silicon Labs или с китайским CH340");
-
-                projects.get(0).addChapter("Предупреждение", "Все рассмотренные советы настоятельно рекомендуется использовать только в образовательных целях. Блокировка передачи данных и использование рассмотренных средств может преследоваться по закону.В репозитории на GitHub ты можешь выбрать версию для конкретной платы." );
-                projects.get(0).addChapter("Инструкция", R.drawable.d,
-                        "https://github.com/SpacehuhnTech/esp8266_deauther/releases" +
-                                " Файлы с расширением bin — это скомпилированные скетчи. Их нужно устанавливать на плату через специальный загрузчик. Но если захочешь, то в архивах с исходным кодом ты отыщешь библиотеки и скетчи, которые можно поставить через Arduino IDE.");
-                projects.get(0).addChapter(" ", R.drawable.b, "Загрузка .bin\n" +
-                        "Если ты выбрал вариант с загрузкой бинарника, то для начала запускай программу NodeMCU Flasher. Скачать ее можно в репозитории NodeMCU. Устанавливаем драйверы для CP2102 либо для CH340. После этого подключаем плату к компьютеру, открываем программу NodeMCU Flasher, выбираем порт COM в диспетчере устройств в разделе «Порты (COM и LPT)». Теперь переходим во вкладку Config, жмем на шестеренку и выбираем скачанный файл .bin. После добавления файла в строке слева появится его путь. Переходи во вкладку Operation и нажимай на Flash — прошивка после этого будет загружена в плату.");
-
-                projects.get(0).addChapter("Практика", "После включения плата создаст точку доступа. Подключайся к ней и заходи по адресу 192.168.4.1 или deauth.me. Ты попадешь в конфигуратор и увидишь предупреждение." +
-                        "В разделе конфигурации в строке LANG указываем ru для включения русского языка в веб-интерфейсе. Чтобы настройки вступили в силу, нужно нажать на «Сохранить» и перезагрузить устройство. Теперь оно готово к работе, можно начинать портить жизнь соседям." +
-                        "Если в разделе сканирования нажать Scan APs, то глушилка находит все точки доступа Wi-Fi. Выбираешь одну или несколько сетей, и можно переходить в раздел атак. Режим Deauth отключает все устройства от выбранной сети. Режим Beacon позволяет создавать одновременно до 60 точек доступа." );
-return projects;
-            case 3:
-                LinkedList<Content> ideas = new LinkedList<>();
-
-                ideas.add(new Idea(R.drawable.w, "Valet Byte", "Wifi jammer"));
-                ideas.get(0).addChapter("Приветствие", "Привет, это пробная статья в которой я хотел рассказать вам как сделать Wifi jammer, или Wifi глушилку, называйте как хотите." +
-                        "В последнее время большую популярность приобрели недорогие и миниатюрные платы с поддержкой программной платформы NodeMCU. Они построены на модуле ESP8266, который реализует работу с Wi-Fi по стандарту 802.11b/g/n на частоте 2,4 ГГц. Сейчас встречается два варианта подобных плат: с чипом CP2102 американской компании Silicon Labs или с китайским CH340");
-
-                ideas.get(0).addChapter("Приветствие", "Привет, это пробная статья в которой я хотел рассказать вам как сделать Wifi jammer, или Wifi глушилку, называйте как хотите." +
-                        "В последнее время большую популярность приобрели недорогие и миниатюрные платы с поддержкой программной платформы NodeMCU. Они построены на модуле ESP8266, который реализует работу с Wi-Fi по стандарту 802.11b/g/n на частоте 2,4 ГГц. Сейчас встречается два варианта подобных плат: с чипом CP2102 американской компании Silicon Labs или с китайским CH340");
-
-                ideas.get(0).addChapter("Предупреждение", "Все рассмотренные советы настоятельно рекомендуется использовать только в образовательных целях. Блокировка передачи данных и использование рассмотренных средств может преследоваться по закону.В репозитории на GitHub ты можешь выбрать версию для конкретной платы." );
-                ideas.get(0).addChapter("Инструкция", R.drawable.d,
-                        "https://github.com/SpacehuhnTech/esp8266_deauther/releases" +
-                                " Файлы с расширением bin — это скомпилированные скетчи. Их нужно устанавливать на плату через специальный загрузчик. Но если захочешь, то в архивах с исходным кодом ты отыщешь библиотеки и скетчи, которые можно поставить через Arduino IDE.");
-                ideas.get(0).addChapter(" ", R.drawable.b, "Загрузка .bin\n" +
-                        "Если ты выбрал вариант с загрузкой бинарника, то для начала запускай программу NodeMCU Flasher. Скачать ее можно в репозитории NodeMCU. Устанавливаем драйверы для CP2102 либо для CH340. После этого подключаем плату к компьютеру, открываем программу NodeMCU Flasher, выбираем порт COM в диспетчере устройств в разделе «Порты (COM и LPT)». Теперь переходим во вкладку Config, жмем на шестеренку и выбираем скачанный файл .bin. После добавления файла в строке слева появится его путь. Переходи во вкладку Operation и нажимай на Flash — прошивка после этого будет загружена в плату.");
-
-                ideas.get(0).addChapter("Практика", "После включения плата создаст точку доступа. Подключайся к ней и заходи по адресу 192.168.4.1 или deauth.me. Ты попадешь в конфигуратор и увидишь предупреждение." +
-                        "В разделе конфигурации в строке LANG указываем ru для включения русского языка в веб-интерфейсе. Чтобы настройки вступили в силу, нужно нажать на «Сохранить» и перезагрузить устройство. Теперь оно готово к работе, можно начинать портить жизнь соседям." +
-                        "Если в разделе сканирования нажать Scan APs, то глушилка находит все точки доступа Wi-Fi. Выбираешь одну или несколько сетей, и можно переходить в раздел атак. Режим Deauth отключает все устройства от выбранной сети. Режим Beacon позволяет создавать одновременно до 60 точек доступа." );
-return ideas;
-            default:
-                return null;
-        }
+                for (ServerModel project : ideas) {
+                    project.setBitmap(clientAPI.getPhoto(project.getPhoto()).execute().body().byteStream());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+        new Thread(()->{
+            try {
+                stats.addAll(clientAPI.getModelsByID(id, 3).execute().body());
+                for (ServerModel project : stats) {
+                    project.setBitmap(clientAPI.getPhoto(project.getPhoto()).execute().body().byteStream());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 }
+

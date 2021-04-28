@@ -1,15 +1,18 @@
 package server.controllers;
 
+import org.apache.catalina.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import server.model.Person;
+import server.model.ServerModel;
 import server.service.UploadService;
 import server.service.UsersUtilService;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.List;
 
 @RestController
 public class MainController {
@@ -51,13 +54,8 @@ public class MainController {
     @RequestMapping(value = "/uploadPhoto", method = RequestMethod.POST)
     @ResponseBody
     public Integer upload(@RequestParam("description") String s,
-                          @RequestParam("names") String[] names,
-                          @RequestParam("texts") String[] texts,
-                          @RequestParam MultipartFile... file){
+                          @RequestParam("dates") List<ServerModel> models){
         System.out.println(s);
-        System.out.println(Arrays.toString(names));
-        System.out.println(Arrays.toString(texts));
-        uploadService.upload(file);
         return 1;
     }
 }

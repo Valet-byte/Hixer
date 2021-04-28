@@ -3,7 +3,6 @@ package com.abyte.valet.testan40121.activitys;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -20,13 +19,17 @@ import android.widget.LinearLayout;
 import com.abyte.valet.testan40121.R;
 import com.abyte.valet.testan40121.cl_se.RetrofitClient;
 import com.abyte.valet.testan40121.file_util.RealPathUtil;
+import com.abyte.valet.testan40121.model.server_model.ServerModel;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -38,45 +41,60 @@ import retrofit2.Response;
 public class AddActivity extends AppCompatActivity {
     private LinearLayout linearLayout;
     private LinkedList<ImageView> images;
-    private LinkedList<File> files;
+    private Map <Integer,File> files;
     private LinkedList<View> views;
+    private LinkedList<ServerModel> models;
     public static final String TAG = "MyTag";
+    private Integer type;
 
     @Override
     public void onBackPressed() {
-        RequestBody requestBody;
-        MultipartBody.Part[] parts = new MultipartBody.Part[files.size()];
-        String[] name = new String[views.size()];
-        String[] texts = new String[views.size()];
-        for (int i = 0; i < files.size(); i++) {
-            File file = files.get(i);
-            requestBody = RequestBody.create(MediaType.parse("image/*"), file);
-            parts[i] = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
-        }
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), MainActivity.person.toString());
+        ArrayList<MultipartBody.Part> parts = new ArrayList<>();
+        String name;
+        String texts ;
         View view;
         EditText nameEt, textEt;
         for (int i = 0; i < views.size(); i++) {
             view = views.get(i);
             nameEt = view.findViewById(R.id.et_name);
             textEt = view.findViewById(R.id.et_text);
-            name[i] = nameEt.getText().toString();
-            texts[i] = textEt.getText().toString();
+            name = nameEt.getText().toString();
+            texts = textEt.getText().toString();
+            if (files.containsKey(i)){
+                File file = files.get(i);
+                RequestBody body = RequestBody.create(MediaType.parse("image/*"), file);
+                MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), body);
+                parts.add(part);
+                models.add(new ServerModel(name, texts, MainActivity.person.getId(), file.getName(), type, i));
+            } else {
+                models.add(new ServerModel(name, texts, MainActivity.person.getId(), type, i));
+            }
         }
 
-        RequestBody body = RequestBody.create(MediaType.parse("imagee/*"), "Images");
-        new Thread(() ->{
-            RetrofitClient.uploadPhotos(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    Log.i(TAG, "onResponse: " + response.code());
-                }
 
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    Log.i(TAG, "onFailure: " + t.getMessage());
-                }
-            }, body, name, texts, parts);
-        }).start();
+        ServerModel[] modelsArr = new ServerModel[models.size()];
+        for (int i = 0; i < models.size(); i++) {
+            modelsArr[i] = models.get(i);
+        }
+
+        MultipartBody.Part[] partArr = new MultipartBody.Part[parts.size()];
+        for (int i = 0; i < parts.size(); i++) {
+            partArr[i] = parts.get(i);
+        }
+
+        Log.i(TAG, "onBackPressed: " + Arrays.toString(models.toArray()));
+        new Thread(() -> RetrofitClient.uploadPhotos(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.i(TAG, "onResponse: " + response.code());
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.i(TAG, "onFailure: " + t.getMessage());
+            }
+        }, requestBody, modelsArr, partArr)).start();
         super.onBackPressed();
     }
 
@@ -84,10 +102,12 @@ public class AddActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
+        models = new LinkedList<>();
         linearLayout = findViewById(R.id.sv_main);
         images = new LinkedList<>();
-        files = new LinkedList<>();
+        files = new HashMap<>();
         views = new LinkedList<>();
+        type = getIntent().getIntExtra(MainActivity.MSG_NAME, 1);
     }
 
     public void addView(View v) {
@@ -135,7 +155,7 @@ public class AddActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            files.add(new File(RealPathUtil.getRealPath(this, _uri)));
+            files.put(requestCode, new File(RealPathUtil.getRealPath(this, _uri)));
         }
     }
 }

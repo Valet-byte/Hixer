@@ -2,10 +2,8 @@ package com.abyte.valet.testan40121.fragments;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -17,7 +15,6 @@ import com.abyte.valet.testan40121.activitys.MainActivity;
 import com.abyte.valet.testan40121.adapters.ArticleAdapter;
 import com.abyte.valet.testan40121.cl_se.RetrofitClient;
 import com.abyte.valet.testan40121.model.Content;
-import com.abyte.valet.testan40121.model.Projects.Project;
 import com.abyte.valet.testan40121.model.artcles.Article;
 import com.abyte.valet.testan40121.model.person.Person;
 
@@ -58,6 +55,6 @@ public class ArticleFragment extends Fragment {
     }
 
     private LinkedList<Content> getContents(Person p){
-        return RetrofitClient.getContentByUser(p, 1);
+        return /*RetrofitClient.getContentByUser(p, 1)*/ new LinkedList<Content>();
     }
 }

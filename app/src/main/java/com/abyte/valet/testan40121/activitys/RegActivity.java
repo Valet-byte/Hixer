@@ -25,8 +25,6 @@ import retrofit2.Response;
 
 public class RegActivity extends AppCompatActivity {
     private EditText login, password;
-
-    private RetrofitClient client;
     private MessageDigest digest;
     {
         try {
@@ -48,7 +46,6 @@ public class RegActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reg);
-        client = new RetrofitClient();
         login = findViewById(R.id.et_login);
         password = findViewById(R.id.et_password);
         PersonDB db = new PersonDB(this);
@@ -65,7 +62,7 @@ public class RegActivity extends AppCompatActivity {
                 }
                 Log.i("MyTag", builder.toString());
 
-                client.findUser(new Callback<Person>() {
+                RetrofitClient.findUser(new Callback<Person>() {
                     @Override
                     public void onResponse(@NonNull Call<Person> call, @NonNull Response<Person> response) {
                         runOnUiThread(() -> {
@@ -74,7 +71,9 @@ public class RegActivity extends AppCompatActivity {
                                 db.addPerson(person);
                                 Intent i = new Intent(RegActivity.this, MainActivity.class);
                                 i.putExtra(MainActivity.MSG_NAME, person);
+                                RetrofitClient.startDownload(person.getId());
                                 startActivityForResult(i, MainActivity.R_CODE);
+
                             }
                         });
                     }
@@ -93,13 +92,14 @@ public class RegActivity extends AppCompatActivity {
         if (p != null) {// если в бд что-то есть
             Log.i("MyTag", p.toString());
 
-            client.findUser(new Callback<Person>() {
+            RetrofitClient.findUser(new Callback<Person>() {
                 @Override
                 public void onResponse(@NonNull Call<Person> call, @NonNull Response<Person> response) {
                     runOnUiThread(() -> {
                         Person person = response.body();
                         Intent i = new Intent(RegActivity.this, MainActivity.class);
                         i.putExtra(MainActivity.MSG_NAME, person);
+                        RetrofitClient.startDownload(person.getId());
                         startActivityForResult(i, MainActivity.R_CODE);
                     });
 
