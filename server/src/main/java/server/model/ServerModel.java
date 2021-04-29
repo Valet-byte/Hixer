@@ -1,42 +1,102 @@
 package server.model;
 
-import org.springframework.web.multipart.MultipartFile;
+import javax.annotation.Generated;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
+@Generated("jsonschema2pojo")
 public class ServerModel implements Serializable {
-    private String name;
+    @SerializedName("type")
+    @Expose
+    private Integer type;
+    @SerializedName("ID")
+    @Expose
+    private Long ID;
+    @SerializedName("authorID")
+    @Expose
+    private Long authorID;
+    @SerializedName("position")
+    @Expose
+    private Integer position;
+    @SerializedName("info")
+    @Expose
     private String info;
-    private Person author;
-    private MultipartFile photo;
 
-    public ServerModel(String name, String info, Person author) {
-        this.name = name;
-        this.info = info;
-        this.author = author;
+    public Integer getType() {
+        return type;
     }
 
-    public ServerModel(String name, String info, Person author, MultipartFile photo) {
+    @SerializedName("name")
+    @Expose
+    private String name;
+
+    public void setID(Long ID) {
+        this.ID = ID;
+    }
+
+    public ServerModel(String name, String info, Long authorID, Integer type) {
+        this.type = type;
         this.name = name;
         this.info = info;
-        this.author = author;
+        this.authorID = authorID;
+    }
+
+    public ServerModel(String name, String info, Long authorID, String photo, Integer type) {
+        this.type = type;
+        this.name = name;
+        this.info = info;
+        this.authorID = authorID;
         this.photo = photo;
     }
 
-    public String getName() {
-        return name;
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
+
+    public Long getID() {
+        return ID;
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    @SerializedName("photo")
+    @Expose
+    private String photo;
+
+    public Long getAuthorID() {
+        return authorID;
+    }
+
+    public void setAuthorID(Long authorID) {
+        this.authorID = authorID;
     }
 
     public String getInfo() {
         return info;
     }
 
-    public Person getAuthor() {
-        return author;
+    public void setInfo(String info) {
+        this.info = info;
     }
 
-    public MultipartFile getPhoto() {
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhoto() {
         return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
     @Override
@@ -44,8 +104,9 @@ public class ServerModel implements Serializable {
         return "ServerModel{" +
                 "name='" + name + '\'' +
                 ", info='" + info + '\'' +
-                ", author=" + author +
+                ", author=" + authorID +
                 ", photo=" + photo +
                 '}';
     }
+
 }
