@@ -13,24 +13,16 @@ import android.view.ViewGroup;
 
 import com.abyte.valet.testan40121.activitys.AddActivity;
 import com.abyte.valet.testan40121.adapters.PersonContentAdapters;
-import com.abyte.valet.testan40121.cl_se.RetrofitClient;
-import com.abyte.valet.testan40121.model.Content;
+import com.abyte.valet.testan40121.rest.RetrofitClient;
 
 import android.widget.TextView;
 
 import com.abyte.valet.testan40121.R;
 import com.abyte.valet.testan40121.activitys.MainActivity;
 import com.abyte.valet.testan40121.db.PersonDB;
-import com.abyte.valet.testan40121.model.person.Person;
-import com.abyte.valet.testan40121.model.server_model.ServerModel;
-
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 
 public class PersonalFragment extends Fragment {
-    private RecyclerView recyclerView;
-    private static PersonContentAdapters adapters;
+    private static PersonContentAdapters adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,15 +30,21 @@ public class PersonalFragment extends Fragment {
         Log.i("MyTag", "onCreateView");
         View view = inflater.inflate(R.layout.fragment_personal, container, false);
         TextView login = view.findViewById(R.id.tv_nik);
-        recyclerView = view.findViewById(R.id.rv_person_content);
-        adapters = new PersonContentAdapters(RetrofitClient.projects, getActivity(), this);
-        recyclerView.setAdapter(adapters);
+        RecyclerView recyclerView = view.findViewById(R.id.rv_person_content);
+        adapter = new PersonContentAdapters(RetrofitClient.projectsFromUser, getActivity(), this);
+        recyclerView.setAdapter(adapter);
         login.setText(MainActivity.person.getName());
 
         view.findViewById(R.id.btn_out).setOnClickListener(v ->{
             PersonDB db = new PersonDB(getActivity());
             db.deletedPerson();
             requireActivity().setResult(2);
+            RetrofitClient.allDowngrade();
+            dropAdapter();
+            IdeaFragment.dropAdapter();
+            ProjectsFragment.dropAdapter();
+            ArticleFragment.dropAdapter();
+            InfoFragment.dropAdapter();
             getActivity().finish();
         });
 
@@ -65,12 +63,9 @@ public class PersonalFragment extends Fragment {
         invalidate();
     }
 
-    private void getPersonInfo(Person p, LinkedList<ServerModel> models, Integer type){
-        RetrofitClient.getContentByUser(MainActivity.person, type, models);
-    }
 
     public static void invalidate(){
-        adapters.notifyDataSetChanged();
+        if (adapter != null) adapter.notifyDataSetChanged();
     }
-
+    public static void dropAdapter() {if (adapter != null) adapter = null;}
 }

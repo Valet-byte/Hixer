@@ -13,19 +13,18 @@ import android.view.ViewGroup;
 import com.abyte.valet.testan40121.R;
 import com.abyte.valet.testan40121.activitys.MainActivity;
 import com.abyte.valet.testan40121.adapters.ArticleAdapter;
-import com.abyte.valet.testan40121.cl_se.RetrofitClient;
-import com.abyte.valet.testan40121.model.Content;
-import com.abyte.valet.testan40121.model.artcles.Article;
-import com.abyte.valet.testan40121.model.person.Person;
+import com.abyte.valet.testan40121.rest.RetrofitClient;
+import com.abyte.valet.testan40121.model.server_model.ServerModel;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class ArticleFragment extends Fragment {
 
-    private LinkedList<Content> contents;
-    private ArticleAdapter articleAdapter;
+    private List<ServerModel> contents;
+    private static ArticleAdapter articleAdapter;
 
-    public static Fragment getInstance(LinkedList<Article> articles) {
+    public static Fragment getInstance(LinkedList<ServerModel> articles) {
         Bundle b = new Bundle();
         ProjectsFragment fragment = new ProjectsFragment();
         b.putSerializable(MainActivity.MSG_NAME, articles);
@@ -36,7 +35,7 @@ public class ArticleFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        contents = getContents(((MainActivity) getActivity()).person);
+        contents = RetrofitClient.stats;
     }
 
     @Override
@@ -54,7 +53,8 @@ public class ArticleFragment extends Fragment {
         return view;
     }
 
-    private LinkedList<Content> getContents(Person p){
-        return /*RetrofitClient.getContentByUser(p, 1)*/ new LinkedList<Content>();
+    public static void invalidate(){
+        if (articleAdapter != null)articleAdapter.notifyDataSetChanged();
     }
+    public static void dropAdapter() {if (articleAdapter != null) articleAdapter = null;}
 }

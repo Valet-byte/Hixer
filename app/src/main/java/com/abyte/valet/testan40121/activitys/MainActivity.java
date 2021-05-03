@@ -12,16 +12,18 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.abyte.valet.testan40121.R;
 import com.abyte.valet.testan40121.model.person.Person;
+import com.abyte.valet.testan40121.rest.RetrofitClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
-
     public static final String MSG_NAME = "Msg";
     public static final String MSG_POS = "Position";
     public static final String MSG_ID_BACK_FRAGMENT = "ID";
@@ -45,33 +47,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         verifyStoragePermissions(this);
+        person =  (Person) getIntent().getSerializableExtra(MSG_NAME);
+        RetrofitClient.startDownload( this);
 
         Toolbar toolbar = findViewById(R.id.my_tool_bar);
 
         this.setSupportActionBar(toolbar);
         BottomNavigationView navigationView = findViewById(R.id.bottomNavigationView);
 
-        person =  (Person) getIntent().getSerializableExtra(MSG_NAME);
 
-        /*navigationView.setOnNavigationItemSelectedListener(item -> {
-                    switch (item.getItemId()){
-                        case R.id.projectsFragment2:
-                            NavHostFragment.findNavController(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment))).navigate(R.id.projectsFragment2);
-                            break;
-                        case R.id.ideaFragment2:
-                            NavHostFragment.findNavController(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment))).navigate(R.id.ideaFragment2);
-                            break;
-                        case R.id.articleFragment2:
-                            NavHostFragment.findNavController(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment))).navigate(R.id.articleFragment2);
-                            break;
-                        case R.id.personalFragment2:
-                            NavHostFragment.findNavController(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment))).navigate(R.id.personalFragment2);
-                            break;
 
-                    }
-                    return true;
-                }
-        );*/
         NavController navController =
                 NavHostFragment.findNavController(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment)));
         NavigationUI.setupWithNavController(navigationView, navController);

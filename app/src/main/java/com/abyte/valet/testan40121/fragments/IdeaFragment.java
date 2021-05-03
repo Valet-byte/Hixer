@@ -11,25 +11,27 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.abyte.valet.testan40121.R;
-import com.abyte.valet.testan40121.activitys.MainActivity;
 import com.abyte.valet.testan40121.adapters.IdeaAdapters;
-import com.abyte.valet.testan40121.cl_se.RetrofitClient;
-import com.abyte.valet.testan40121.model.Content;
-import com.abyte.valet.testan40121.model.ideas.Idea;
-import com.abyte.valet.testan40121.model.person.Person;
+import com.abyte.valet.testan40121.model.server_model.ServerModel;
+import com.abyte.valet.testan40121.rest.RetrofitClient;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class IdeaFragment extends Fragment {
 
-    private IdeaAdapters ideaAdapters;
-    private LinkedList<Content> contents;
+    private static IdeaAdapters ideaAdapters;
+    private List<ServerModel> contents;
+
+    public static void invalidate() {
+        if (ideaAdapters != null) ideaAdapters.notifyDataSetChanged();
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        contents = getContents(((MainActivity)getActivity()).person);
+        contents = RetrofitClient.ideas;
     }
 
     @Override
@@ -44,16 +46,6 @@ public class IdeaFragment extends Fragment {
 
         return view;
     }
+    public static void dropAdapter() {if (ideaAdapters != null) ideaAdapters = null;}
 
-    public static IdeaFragment getInstance(LinkedList<Idea> ideas){
-        Bundle b = new Bundle();
-        IdeaFragment fragment = new IdeaFragment();
-        b.putSerializable(MainActivity.MSG_NAME, ideas);
-        fragment.setArguments(b);
-        return fragment;
-    }
-
-    private LinkedList<Content> getContents(Person p){
-        return /*RetrofitClient.getContentByUser(p, 3)*/ new LinkedList<Content>();
-    }
 }

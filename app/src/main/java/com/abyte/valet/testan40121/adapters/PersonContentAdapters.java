@@ -15,17 +15,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.abyte.valet.testan40121.R;
 import com.abyte.valet.testan40121.activitys.MainActivity;
-import com.abyte.valet.testan40121.model.Content;
 import com.abyte.valet.testan40121.model.server_model.ServerModel;
+import com.abyte.valet.testan40121.rest.RetrofitClient;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class PersonContentAdapters extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private final LinkedList<ServerModel> contents;
+    private final List<ServerModel> contents;
     private final LayoutInflater inflater;
     private final Fragment resFragment;
 
-    public PersonContentAdapters(LinkedList<ServerModel> contents, Context context, Fragment resFragment){
+    public PersonContentAdapters(List<ServerModel> contents, Context context, Fragment resFragment){
         this.resFragment = resFragment;
         inflater = LayoutInflater.from(context);
         this.contents = contents;
@@ -63,12 +64,11 @@ public class PersonContentAdapters extends RecyclerView.Adapter<RecyclerView.Vie
         ((MyViewHolder) holder).imageView.setImageBitmap(content.getBitmap());
 
         ((MyViewHolder) holder).imageView.setOnClickListener((View v) -> {
-
+                    RetrofitClient.startDownloadByMainStats(content.getName());
                     Bundle bundle = new Bundle();
 
-                    bundle.putSerializable(MainActivity.MSG_NAME, contents);
-                    bundle.putInt(MainActivity.MSG_ID_BACK_FRAGMENT, R.id.articleFragment2);
-                    bundle.putInt(MainActivity.MSG_POS, position);
+                    bundle.putSerializable(MainActivity.MSG_NAME, content);
+                    bundle.putInt(MainActivity.MSG_ID_BACK_FRAGMENT, R.id.personalFragment2);
 
                     NavHostFragment.findNavController(resFragment).navigate(R.id.infoFragment, bundle);
                 }

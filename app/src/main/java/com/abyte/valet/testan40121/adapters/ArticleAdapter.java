@@ -1,5 +1,6 @@
 package com.abyte.valet.testan40121.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,18 +16,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.abyte.valet.testan40121.R;
 import com.abyte.valet.testan40121.activitys.MainActivity;
-import com.abyte.valet.testan40121.model.Content;
+import com.abyte.valet.testan40121.rest.RetrofitClient;
+import com.abyte.valet.testan40121.model.server_model.ServerModel;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final LinkedList<Content> contents;
+    private final List<ServerModel> contents;
     private final LayoutInflater inflater;
     private final Fragment resFragment;
+    private final Context context;
 
-    public ArticleAdapter(LinkedList<Content> contents, Context context, Fragment resFragment){
+    public ArticleAdapter(List<ServerModel> contents, Context context, Fragment resFragment){
+        this.context = context;
         this.resFragment = resFragment;
         inflater = LayoutInflater.from(context);
         this.contents = contents;
@@ -35,13 +39,13 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private static class MyViewHolder extends RecyclerView.ViewHolder{
 
         final ImageView imageView;
-        final TextView name, author;
+        final TextView info, name;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            author = itemView.findViewById(R.id.tv_author);
-            name = itemView.findViewById(R.id.tv_s);
+            name = itemView.findViewById(R.id.tv_author);
+            info = itemView.findViewById(R.id.tv_s);
             imageView = itemView.findViewById(R.id.img);
         }
     }
@@ -49,7 +53,6 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View view = inflater.inflate(R.layout.list_item, parent, false);
 
         return new MyViewHolder(view);
@@ -57,23 +60,27 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        Content content = contents.get(position);
+        ServerModel content = contents.get(position);
 
-            ((ArticleAdapter.MyViewHolder) holder).name.setText(content.getInfo());
-            ((ArticleAdapter.MyViewHolder) holder).author.setText(content.getAuthor());
-            ((ArticleAdapter.MyViewHolder) holder).imageView.setImageResource(content.getImg());
+            ((ArticleAdapter.MyViewHolder) holder).name.setText(content.getName());
+            ((MyViewHolder) holder).info.setText(content.getInfo());
+            ((ArticleAdapter.MyViewHolder) holder).imageView.setImageBitmap(content.getBitmap());
 
             ((ArticleAdapter.MyViewHolder) holder).imageView.setOnClickListener((View v) -> {
 
                         Bundle bundle = new Bundle();
 
-                        bundle.putSerializable(MainActivity.MSG_NAME, contents);
+                        bundle.putSerializable(MainActivity.MSG_NAME, content);
                         bundle.putInt(MainActivity.MSG_ID_BACK_FRAGMENT, R.id.articleFragment2);
                         bundle.putInt(MainActivity.MSG_POS, position);
 
                         NavHostFragment.findNavController(resFragment).navigate(R.id.infoFragment, bundle);
                     }
             );
+
+            if (position == contents.size()){
+                RetrofitClient.startDownload((Activity) context);
+            }
         }
 
 

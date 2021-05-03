@@ -1,5 +1,6 @@
 package com.abyte.valet.testan40121.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.abyte.valet.testan40121.R;
-import com.abyte.valet.testan40121.model.Content;
+import com.abyte.valet.testan40121.model.server_model.ServerModel;
+import com.abyte.valet.testan40121.rest.RetrofitClient;
+
+import java.util.List;
 
 public class ContentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -27,11 +31,13 @@ public class ContentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    private final Content content;
+    private final List<ServerModel> contents;
     private final LayoutInflater inflater;
+    private final Context context;
 
-    public ContentsAdapter(Content content, Context context){
-        this.content = content;
+    public ContentsAdapter(List<ServerModel> contents, Context context){
+        this.context = context;
+        this.contents = contents;
         inflater = LayoutInflater.from(context);
     }
 
@@ -46,15 +52,17 @@ public class ContentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-        ((MyHolder)holder).tvTable.setText(content.chapters.get(position).getTable());
-        ((MyHolder)holder).textView.setText(content.chapters.get(position).getInfo());
+        ServerModel content = contents.get(position);
 
-        if (content.chapters.get(position).getImg() != R.drawable.ic1) ((MyHolder) holder).imageView.setImageResource(content.chapters.get(position).getImg());
+        ((MyHolder)holder).tvTable.setText(content.getName());
+        ((MyHolder)holder).textView.setText(content.getInfo());
+
+        if (content.getBitmap() != null) ((MyHolder) holder).imageView.setImageBitmap(content.getBitmap());
 
     }
 
     @Override
     public int getItemCount() {
-        return content.chapters.size();
+        return contents.size();
     }
 }

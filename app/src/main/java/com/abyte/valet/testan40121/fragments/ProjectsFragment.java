@@ -10,20 +10,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.abyte.valet.testan40121.R;
-import com.abyte.valet.testan40121.activitys.MainActivity;
 import com.abyte.valet.testan40121.adapters.ContentAdapter;
-import com.abyte.valet.testan40121.cl_se.RetrofitClient;
-import com.abyte.valet.testan40121.model.Content;
-import com.abyte.valet.testan40121.model.Projects.Project;
-import com.abyte.valet.testan40121.model.person.Person;
+import com.abyte.valet.testan40121.model.server_model.ServerModel;
+import com.abyte.valet.testan40121.rest.RetrofitClient;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class ProjectsFragment extends Fragment {
 
-    public ContentAdapter contentAdapter;
-    private LinkedList<Content> contents;
+    public static ContentAdapter contentAdapter;
     private RecyclerView recyclerView;
+
+    public static void invalidate() {
+        if (contentAdapter != null) contentAdapter.notifyDataSetChanged();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,22 +40,13 @@ public class ProjectsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        contents = getContents(((MainActivity) getActivity()).person);
+        List<ServerModel> contents = RetrofitClient.projects;
         if (contents != null){
             contentAdapter = new ContentAdapter(getContext(), contents, this);
             recyclerView.setAdapter(contentAdapter);
         }
     }
 
-    public static ProjectsFragment getInstance(LinkedList<Project> projects){
-        Bundle b = new Bundle();
-        ProjectsFragment fragment = new ProjectsFragment();
-        b.putSerializable(MainActivity.MSG_NAME, projects);
-        fragment.setArguments(b);
-        return fragment;
-    }
+    public static void dropAdapter() {if (contentAdapter != null) contentAdapter = null;}
 
-    private LinkedList<Content> getContents(Person p){
-        return null;
-    }
 }

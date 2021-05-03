@@ -17,7 +17,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.abyte.valet.testan40121.R;
-import com.abyte.valet.testan40121.cl_se.RetrofitClient;
+import com.abyte.valet.testan40121.fragments.PersonalFragment;
+import com.abyte.valet.testan40121.model.person.Person;
+import com.abyte.valet.testan40121.rest.RetrofitClient;
 import com.abyte.valet.testan40121.file_util.RealPathUtil;
 import com.abyte.valet.testan40121.model.server_model.ServerModel;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -88,6 +90,7 @@ public class AddActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 Log.i(TAG, "onResponse: " + response.code());
+                RetrofitClient.startDownloadByUserID(MainActivity.person.getId(), AddActivity.this);
             }
 
             @Override
