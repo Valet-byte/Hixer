@@ -3,6 +3,7 @@ package com.abyte.valet.testan40121.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,6 +24,9 @@ import com.abyte.valet.testan40121.db.PersonDB;
 
 public class PersonalFragment extends Fragment {
     private static PersonContentAdapters adapter;
+    private AppCompatButton btnProjects, btnIdeas, btnArticles;
+    private RecyclerView recyclerView;
+    private byte typeContent;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,42 +34,63 @@ public class PersonalFragment extends Fragment {
         Log.i("MyTag", "onCreateView");
         View view = inflater.inflate(R.layout.fragment_personal, container, false);
         TextView login = view.findViewById(R.id.tv_nik);
-        RecyclerView recyclerView = view.findViewById(R.id.rv_person_content);
+        recyclerView = view.findViewById(R.id.rv_person_content);
         adapter = new PersonContentAdapters(RetrofitClient.projectsFromUser, getActivity(), this);
         recyclerView.setAdapter(adapter);
         login.setText(MainActivity.person.getName());
-
-        view.findViewById(R.id.btn_out).setOnClickListener(v ->{
-            PersonDB db = new PersonDB(getActivity());
-            db.deletedPerson();
-            requireActivity().setResult(2);
-            RetrofitClient.allDowngrade();
-            dropAdapter();
-            IdeaFragment.dropAdapter();
-            ProjectsFragment.dropAdapter();
-            ArticleFragment.dropAdapter();
-            InfoFragment.dropAdapter();
-            getActivity().finish();
+        btnProjects = view.findViewById(R.id.btn_project);
+        btnIdeas = view.findViewById(R.id.btn_ideas);
+        btnArticles = view.findViewById(R.id.btn_articles);
+        typeContent = 1;
+        btnProjects.setOnClickListener((v)->{
+            typeContent = 1;
+            btnIdeas.setTextColor(getActivity().getResources().getColor(R.color.my_blue));
+            btnArticles.setTextColor(getActivity().getResources().getColor(R.color.my_blue));
+            btnProjects.setTextColor(getActivity().getResources().getColor(R.color.black));
+            recyclerView.setAdapter(new PersonContentAdapters(RetrofitClient.projectsFromUser, getActivity(), PersonalFragment.this));
         });
+        btnIdeas.setOnClickListener((v)->{
+            typeContent = 2;
+            btnProjects.setTextColor(getActivity().getResources().getColor(R.color.my_blue));
+            btnArticles.setTextColor(getActivity().getResources().getColor(R.color.my_blue));
+            btnIdeas.setTextColor(getActivity().getResources().getColor(R.color.black));
+            recyclerView.setAdapter(new PersonContentAdapters(RetrofitClient.ideasFromUser, getActivity(), PersonalFragment.this));
+        });
+        btnArticles.setOnClickListener((v)->{
+            typeContent = 3;
+            btnIdeas.setTextColor(getActivity().getResources().getColor(R.color.my_blue));
+            btnProjects.setTextColor(getActivity().getResources().getColor(R.color.my_blue));
+            btnArticles.setTextColor(getActivity().getResources().getColor(R.color.black));
+            recyclerView.setAdapter(new PersonContentAdapters(RetrofitClient.statsFromUser, getActivity(), PersonalFragment.this));
+        });
+
+        view.findViewById(R.id.btn_out).setOnClickListener(v -> onSaveAndStop());
 
         view.findViewById(R.id.btn_add).setOnClickListener(v -> {
             Intent i = new Intent(getActivity(), AddActivity.class);
-            i.putExtra(MainActivity.MSG_NAME, 1);
+            i.putExtra(MainActivity.MSG_NAME, typeContent);
             startActivity(i);
         });
 
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        invalidate();
+    private void onSaveAndStop(){
+        PersonDB db = new PersonDB(getActivity());
+        db.deletedPerson();
+        requireActivity().setResult(2);
+        RetrofitClient.allDowngrade();
+        dropAdapter();
+        IdeaFragment.dropAdapter();
+        ProjectsFragment.dropAdapter();
+        ArticleFragment.dropAdapter();
+        InfoFragment.dropAdapter();
+        getActivity().finish();
     }
-
-
     public static void invalidate(){
         if (adapter != null) adapter.notifyDataSetChanged();
     }
-    public static void dropAdapter() {if (adapter != null) adapter = null;}
+    public static void dropAdapter() {
+        if (adapter != null) adapter = null;
+    }
 }

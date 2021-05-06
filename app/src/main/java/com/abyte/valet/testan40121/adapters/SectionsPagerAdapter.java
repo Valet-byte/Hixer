@@ -2,6 +2,7 @@ package com.abyte.valet.testan40121.adapters;
 
 import android.content.Context;
 
+import androidx.annotation.IdRes;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
@@ -27,6 +28,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         return PlaceholderFragment.newInstance(mContext.getResources().getString(TAB_TITLES[position]));
     }
+
+
 
     @Nullable
     @Override

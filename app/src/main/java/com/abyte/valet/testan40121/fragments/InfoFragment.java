@@ -1,5 +1,6 @@
 package com.abyte.valet.testan40121.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -22,6 +23,7 @@ import java.util.LinkedList;
 
 public class InfoFragment extends Fragment {
 
+    @SuppressLint("StaticFieldLeak")
     private static ContentsAdapter contentsAdapter;
 
     public static void invalidate() {
@@ -44,7 +46,10 @@ public class InfoFragment extends Fragment {
 
         int ID = getArguments().getInt(MainActivity.MSG_ID_BACK_FRAGMENT);
 
-        btnBack.setOnClickListener((View v) -> NavHostFragment.findNavController(this).navigate(ID));
+        btnBack.setOnClickListener((View v) -> {
+            RetrofitClient.dropInfoList();
+            NavHostFragment.findNavController(this).navigate(ID);
+        });
 
         return view;
     }

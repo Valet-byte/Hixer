@@ -14,7 +14,6 @@ import com.abyte.valet.testan40121.adapters.ContentAdapter;
 import com.abyte.valet.testan40121.model.server_model.ServerModel;
 import com.abyte.valet.testan40121.rest.RetrofitClient;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class ProjectsFragment extends Fragment {

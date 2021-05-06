@@ -20,7 +20,6 @@ import com.abyte.valet.testan40121.R;
 import com.abyte.valet.testan40121.model.server_model.ServerModel;
 import com.abyte.valet.testan40121.rest.RetrofitClient;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import static com.abyte.valet.testan40121.activitys.AddActivity.TAG;
@@ -64,11 +63,12 @@ public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ServerModel content = contents.get(position);
 
-        ((MyViewHolder) holder).name.setText(content.getName());
-        ((MyViewHolder) holder).info.setText(content.getInfo());
+        ((MyViewHolder) holder).name.setText(content.getInfo());
+        ((MyViewHolder) holder).info.setText(content.getName());
         ((MyViewHolder) holder).imageView.setImageBitmap(content.getBitmap());
 
         ((MyViewHolder) holder).imageView.setOnClickListener((View v) -> {
+            Log.i(TAG, "onBindViewHolder: " + content.toString());
                     RetrofitClient.startDownloadByMainStats(content.getName());
                     Bundle bundle = new Bundle();
 

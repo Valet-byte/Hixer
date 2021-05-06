@@ -17,8 +17,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.abyte.valet.testan40121.R;
-import com.abyte.valet.testan40121.fragments.PersonalFragment;
-import com.abyte.valet.testan40121.model.person.Person;
 import com.abyte.valet.testan40121.rest.RetrofitClient;
 import com.abyte.valet.testan40121.file_util.RealPathUtil;
 import com.abyte.valet.testan40121.model.server_model.ServerModel;
@@ -48,58 +46,7 @@ public class AddActivity extends AppCompatActivity {
     private LinkedList<ServerModel> models;
     public static final String TAG = "MyTag";
     private Integer type;
-
-    @Override
-    public void onBackPressed() {
-        RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), MainActivity.person.toString());
-        ArrayList<MultipartBody.Part> parts = new ArrayList<>();
-        String name;
-        String texts ;
-        View view;
-        EditText nameEt, textEt;
-        for (int i = 0; i < views.size(); i++) {
-            view = views.get(i);
-            nameEt = view.findViewById(R.id.et_name);
-            textEt = view.findViewById(R.id.et_text);
-            name = nameEt.getText().toString();
-            texts = textEt.getText().toString();
-            if (files.containsKey(i)){
-                File file = files.get(i);
-                RequestBody body = RequestBody.create(MediaType.parse("image/*"), file);
-                MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), body);
-                parts.add(part);
-                models.add(new ServerModel(name, texts, MainActivity.person.getId(), file.getName(), type, i));
-            } else {
-                models.add(new ServerModel(name, texts, MainActivity.person.getId(), type, i));
-            }
-        }
-
-
-        ServerModel[] modelsArr = new ServerModel[models.size()];
-        for (int i = 0; i < models.size(); i++) {
-            modelsArr[i] = models.get(i);
-        }
-
-        MultipartBody.Part[] partArr = new MultipartBody.Part[parts.size()];
-        for (int i = 0; i < parts.size(); i++) {
-            partArr[i] = parts.get(i);
-        }
-
-        Log.i(TAG, "onBackPressed: " + Arrays.toString(models.toArray()));
-        new Thread(() -> RetrofitClient.uploadPhotos(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                Log.i(TAG, "onResponse: " + response.code());
-                RetrofitClient.startDownloadByUserID(MainActivity.person.getId(), AddActivity.this);
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.i(TAG, "onFailure: " + t.getMessage());
-            }
-        }, requestBody, modelsArr, partArr)).start();
-        super.onBackPressed();
-    }
+    private byte typeContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,5 +107,62 @@ public class AddActivity extends AppCompatActivity {
 
             files.put(requestCode, new File(RealPathUtil.getRealPath(this, _uri)));
         }
+    }
+
+    public void uploadToServer(View v) {
+        if (views.size() >= 3){
+            RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), MainActivity.person.toString());
+            ArrayList<MultipartBody.Part> parts = new ArrayList<>();
+            String name;
+            String texts ;
+            View view;
+            EditText nameEt, textEt;
+            for (int i = 0; i < views.size(); i++) {
+                view = views.get(i);
+                nameEt = view.findViewById(R.id.et_name);
+                textEt = view.findViewById(R.id.et_text);
+                name = nameEt.getText().toString();
+                texts = textEt.getText().toString();
+                if (files.containsKey(i)){
+                    File file = files.get(i);
+                    RequestBody body = RequestBody.create(MediaType.parse("image/*"), file);
+                    MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), body);
+                    parts.add(part);
+                    models.add(new ServerModel(name, texts, MainActivity.person.getId(), file.getName(), type, i));
+                } else {
+                    models.add(new ServerModel(name, texts, MainActivity.person.getId(), type, i));
+                }
+            }
+
+
+            ServerModel[] modelsArr = new ServerModel[models.size()];
+            for (int i = 0; i < models.size(); i++) {
+                modelsArr[i] = models.get(i);
+            }
+
+            MultipartBody.Part[] partArr = new MultipartBody.Part[parts.size()];
+            for (int i = 0; i < parts.size(); i++) {
+                partArr[i] = parts.get(i);
+            }
+
+            Log.i(TAG, "onBackPressed: " + Arrays.toString(models.toArray()));
+            new Thread(() -> RetrofitClient.uploadPhotos(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    Log.i(TAG, "onResponse: " + response.code());
+                    RetrofitClient.startDownloadByUserID(MainActivity.person.getId(), AddActivity.this);
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    Log.i(TAG, "onFailure: " + t.getMessage());
+                }
+            }, requestBody, modelsArr, partArr)).start();
+            onBackPressed();
+        } else {
+            Snackbar.make(v, "Слишком малое количество глав", BaseTransientBottomBar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        }
+
     }
 }

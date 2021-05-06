@@ -45,19 +45,47 @@
 
     </LinearLayout>
 
-<!--    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/nav_view_person"
+    <LinearLayout
+        android:id="@+id/ll_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/my_orange"
-        app:menu="@menu/menu_personal_contents"/>-->
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        tools:layout_editor_absoluteX="0dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_project"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/my_orange"
+            android:text="@string/projects"
+            android:layout_weight="1"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:textColor="@color/my_orange"
+            android:id="@+id/btn_ideas"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/my_orange"
+            android:text="@string/ideas"
+            android:layout_weight="1"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_articles"
+            android:layout_width="0dp"
+            android:textColor="@color/my_orange"
+            android:layout_height="wrap_content"
+            android:background="@color/my_orange"
+            android:text="@string/articles"
+            android:layout_weight="1"/>
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_person_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ll_nav" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_add"
@@ -65,10 +93,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_add"
+        app:srcCompat="@drawable/ic_add_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:rippleColor="@color/my_orange" />
+        app:backgroundTint="@color/my_orange" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

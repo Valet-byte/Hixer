@@ -65,4 +65,6 @@ public class ContentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public int getItemCount() {
         return contents.size();
     }
+
+
 }

@@ -24,5 +24,8 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="pass">Пароль</string>
     <string name="log">Логин</string>
+    <string name="projects">projects</string>
+    <string name="ideas">ideas</string>
+    <string name="articles">articles</string>
 
 </resources>

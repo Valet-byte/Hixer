@@ -70,7 +70,7 @@ public class IdeaAdapters extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         ((MyViewHolder) holder).name.setText(content.getName());
 
         ((MyViewHolder) holder).layout.setOnClickListener((View v) -> {
-
+            RetrofitClient.startDownloadByMainStats(content.getName());
             Bundle bundle = new Bundle();
             bundle.putSerializable(MainActivity.MSG_NAME, content);
             bundle.putInt(MainActivity.MSG_ID_BACK_FRAGMENT, R.id.ideaFragment2);
