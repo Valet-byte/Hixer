@@ -43,12 +43,14 @@ public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private final LayoutInflater inflater;
     private final Fragment resFragment;
     private final Context context;
+    private final Integer ID;
 
-    public ContentAdapter(Context context, List<ServerModel> contents, Fragment fragment) {
+    public ContentAdapter(Context context, List<ServerModel> contents, Fragment fragment, Integer idThisFragment) {
         this.context = context;
         this.contents = contents;
         this.inflater = LayoutInflater.from(context);
         this.resFragment = fragment;
+        ID = idThisFragment;
     }
 
     @NonNull
@@ -73,9 +75,9 @@ public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     Bundle bundle = new Bundle();
 
                     bundle.putSerializable(MainActivity.MSG_NAME, content);
-                    bundle.putInt(MainActivity.MSG_ID_BACK_FRAGMENT, R.id.projectsFragment2);
+                    bundle.putInt(MainActivity.MSG_ID_BACK_FRAGMENT, ID);
 
-                    NavHostFragment.findNavController(resFragment).navigate(R.id.action_projectsFragment2_to_infoFragment, bundle);
+                    NavHostFragment.findNavController(resFragment).navigate(R.id.infoFragment, bundle);
                 }
         );
 

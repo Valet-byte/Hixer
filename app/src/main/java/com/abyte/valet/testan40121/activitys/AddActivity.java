@@ -46,8 +46,6 @@ public class AddActivity extends AppCompatActivity {
     private LinkedList<ServerModel> models;
     public static final String TAG = "MyTag";
     private Integer type;
-    private byte typeContent;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,13 +146,13 @@ public class AddActivity extends AppCompatActivity {
             Log.i(TAG, "onBackPressed: " + Arrays.toString(models.toArray()));
             new Thread(() -> RetrofitClient.uploadPhotos(new Callback<Void>() {
                 @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
+                public void onResponse(@Nullable Call<Void> call,@Nullable Response<Void> response) {
                     Log.i(TAG, "onResponse: " + response.code());
                     RetrofitClient.startDownloadByUserID(MainActivity.person.getId(), AddActivity.this);
                 }
 
                 @Override
-                public void onFailure(Call<Void> call, Throwable t) {
+                public void onFailure(@Nullable Call<Void> call, @Nullable Throwable t) {
                     Log.i(TAG, "onFailure: " + t.getMessage());
                 }
             }, requestBody, modelsArr, partArr)).start();

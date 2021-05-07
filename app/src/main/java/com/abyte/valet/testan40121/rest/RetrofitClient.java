@@ -1,5 +1,6 @@
 package com.abyte.valet.testan40121.rest;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.util.Log;
 
@@ -36,37 +37,22 @@ import static com.abyte.valet.testan40121.activitys.AddActivity.TAG;
 public class RetrofitClient {
 
     private static ClientAPI clientAPI;
-    public static  List<ServerModel> projects = Collections.synchronizedList(new LinkedList<>()),
-    ideas = Collections.synchronizedList(new LinkedList<>()),
-            stats = Collections.synchronizedList(new LinkedList<>()),
-            projectsFromUser =  Collections.synchronizedList(new LinkedList<>()),
-            ideasFromUser = Collections.synchronizedList(new LinkedList<>()),
-            statsFromUser = Collections.synchronizedList(new LinkedList<>());
-    public static List<ServerModel> infoList = Collections.synchronizedList(new ArrayList<>());
+    public static  List<ServerModel> projects, ideas, stats, projectsFromUser,
+            ideasFromUser, statsFromUser;
+    public static List<ServerModel> infoList;
+    @SuppressLint("StaticFieldLeak")
     public static Activity activityRetroFit;
-    private RetrofitClient() {
-        OkHttpClient client = new OkHttpClient.Builder().build();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://192.168.1.111:8080")
-                .addConverterFactory(GsonConverterFactory.create()).client(client).build();
-        clientAPI = retrofit.create(ClientAPI.class);
-        projects =  Collections.synchronizedList(new LinkedList<>());
-                ideas = Collections.synchronizedList(new LinkedList<>());
-                stats = Collections.synchronizedList(new LinkedList<>());
-                projectsFromUser =  Collections.synchronizedList(new LinkedList<>());
-                ideasFromUser = Collections.synchronizedList(new LinkedList<>());
-                statsFromUser = Collections.synchronizedList(new LinkedList<>());
-
-    }
+    private RetrofitClient() { }
 
     public static void registrationUser(Callback<Person> callback,
                                         String name, String password){
-        if (clientAPI == null) { new RetrofitClient(); }
+        if (clientAPI == null) { dropAll(); }
         clientAPI.addUser(name, password).enqueue(callback);
     }
 
     public static void findUser(Callback<Person> callback,
                           String name, String password){
-        if (clientAPI == null) { new RetrofitClient(); }
+        if (clientAPI == null) { dropAll(); }
         clientAPI.findPersons(name, password).enqueue(callback);
     }
 
@@ -75,13 +61,13 @@ public class RetrofitClient {
                                     ServerModel[] models,
                                     MultipartBody.Part... parts){
 
-        if (clientAPI == null) { new RetrofitClient(); }
+        if (clientAPI == null) { dropAll(); }
         clientAPI.uploadPhoto(description, models, parts).enqueue(callback);}
 
 
 
     public static void startDownload( Activity activity) {
-        if (clientAPI == null) { new RetrofitClient(); }
+        if (clientAPI == null) { dropAll(); }
         activityRetroFit = activity;
         new Thread(()->{
             try {
@@ -93,9 +79,7 @@ public class RetrofitClient {
                     }
                 }
 
-                activityRetroFit.runOnUiThread(()->{
-                    ProjectsFragment.invalidate();
-                });
+                activityRetroFit.runOnUiThread(ProjectsFragment::invalidate);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -111,9 +95,7 @@ public class RetrofitClient {
                     }
                 }
 
-                activityRetroFit.runOnUiThread(()->{
-                    IdeaFragment.invalidate();
-                });
+                activityRetroFit.runOnUiThread(IdeaFragment::invalidate);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -126,9 +108,7 @@ public class RetrofitClient {
                         if (project.getPhoto() != null)project.setBitmap(clientAPI.getPhoto(project.getPhoto()).execute().body().byteStream());
                     }
                 }
-                activityRetroFit.runOnUiThread(()->{
-                    ArticleFragment.invalidate();
-                });
+                activityRetroFit.runOnUiThread(ArticleFragment::invalidate);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -137,7 +117,7 @@ public class RetrofitClient {
 
     public static void startDownloadByUserID(Long id, Activity activity){
         activityRetroFit = activity;
-        if (clientAPI == null) { new RetrofitClient(); }
+        if (clientAPI == null) { dropAll(); }
         new Thread(()->{
             try {
                 projectsFromUser.addAll(Objects.requireNonNull(clientAPI.getModelsByID(id, 1).execute().body()));
@@ -160,9 +140,7 @@ public class RetrofitClient {
                         if (project.getPhoto() != null)project.setBitmap(Objects.requireNonNull(clientAPI.getPhoto(project.getPhoto()).execute().body()).byteStream());
                     }
                 }
-                activityRetroFit.runOnUiThread(()->{
-                    PersonalFragment.invalidate();
-                });
+                activityRetroFit.runOnUiThread(PersonalFragment::invalidate);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -175,9 +153,7 @@ public class RetrofitClient {
                         if (project.getPhoto() != null)project.setBitmap(clientAPI.getPhoto(project.getPhoto()).execute().body().byteStream());
                     }
                 }
-                activityRetroFit.runOnUiThread(()->{
-                    PersonalFragment.invalidate();
-                });
+                activityRetroFit.runOnUiThread(PersonalFragment::invalidate);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -203,19 +179,21 @@ public class RetrofitClient {
             }
         }).start();
     }
-
-    public static void allDowngrade(){
-        projects.clear();
-        ideas.clear();
-        stats.clear();
-        infoList.clear();
-        projectsFromUser.clear();
-        ideasFromUser.clear();
-        statsFromUser.clear();
-        new RetrofitClient();
-    }
     public static void dropInfoList(){
         infoList.clear();
+    }
+    public static void dropAll(){
+        OkHttpClient client = new OkHttpClient.Builder().build();
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://192.168.1.111:8080")
+                .addConverterFactory(GsonConverterFactory.create()).client(client).build();
+        clientAPI = retrofit.create(ClientAPI.class);
+        projects =  Collections.synchronizedList(new LinkedList<>());
+        ideas = Collections.synchronizedList(new LinkedList<>());
+        stats = Collections.synchronizedList(new LinkedList<>());
+        infoList = Collections.synchronizedList(new ArrayList<>());
+        projectsFromUser =  Collections.synchronizedList(new LinkedList<>());
+        ideasFromUser = Collections.synchronizedList(new LinkedList<>());
+        statsFromUser = Collections.synchronizedList(new LinkedList<>());
     }
 }
 

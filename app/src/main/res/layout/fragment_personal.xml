@@ -45,47 +45,27 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_nav"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/my_orange"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        tools:layout_editor_absoluteX="0dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_project"
-            android:layout_width="0dp"
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/my_orange"
-            android:text="@string/projects"
-            android:layout_weight="1"/>
-        <androidx.appcompat.widget.AppCompatButton
-            android:textColor="@color/my_orange"
-            android:id="@+id/btn_ideas"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@color/my_orange"
-            android:text="@string/ideas"
-            android:layout_weight="1"/>
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_articles"
-            android:layout_width="0dp"
-            android:textColor="@color/my_orange"
-            android:layout_height="wrap_content"
-            android:background="@color/my_orange"
-            android:text="@string/articles"
-            android:layout_weight="1"/>
-    </LinearLayout>
+            android:background="@color/my_orange" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_person_content"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/pager2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_nav" />
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_add"

@@ -20,7 +20,6 @@ import com.abyte.valet.testan40121.activitys.MainActivity;
 import com.abyte.valet.testan40121.model.server_model.ServerModel;
 import com.abyte.valet.testan40121.rest.RetrofitClient;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class IdeaAdapters extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
@@ -80,7 +79,7 @@ public class IdeaAdapters extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             NavHostFragment.findNavController(resFragment).navigate(R.id.infoFragment, bundle);
 
         });
-        if (position == contents.size()){
+        if (position == contents.size() - 1){
             RetrofitClient.startDownload((Activity) context);
         }
 

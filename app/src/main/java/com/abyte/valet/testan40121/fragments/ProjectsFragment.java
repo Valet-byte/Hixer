@@ -41,7 +41,7 @@ public class ProjectsFragment extends Fragment {
         super.onStart();
         List<ServerModel> contents = RetrofitClient.projects;
         if (contents != null){
-            contentAdapter = new ContentAdapter(getContext(), contents, this);
+            contentAdapter = new ContentAdapter(getContext(), contents, this, R.id.projectsFragment2);
             recyclerView.setAdapter(contentAdapter);
         }
     }
