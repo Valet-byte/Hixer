@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -30,6 +31,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Objects;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -123,7 +125,7 @@ public class AddActivity extends AppCompatActivity {
                 texts = textEt.getText().toString();
                 if (files.containsKey(i)){
                     File file = files.get(i);
-                    RequestBody body = RequestBody.create(MediaType.parse("image/*"), file);
+                    RequestBody body = RequestBody.create(MediaType.parse("image/*"), Objects.requireNonNull(file));
                     MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), body);
                     parts.add(part);
                     models.add(new ServerModel(name, texts, MainActivity.person.getId(), file.getName(), type, i));
@@ -146,13 +148,13 @@ public class AddActivity extends AppCompatActivity {
             Log.i(TAG, "onBackPressed: " + Arrays.toString(models.toArray()));
             new Thread(() -> RetrofitClient.uploadPhotos(new Callback<Void>() {
                 @Override
-                public void onResponse(@Nullable Call<Void> call,@Nullable Response<Void> response) {
+                public void onResponse(@Nullable Call<Void> call, @NonNull Response<Void> response) {
                     Log.i(TAG, "onResponse: " + response.code());
                     RetrofitClient.startDownloadByUserID(MainActivity.person.getId(), AddActivity.this);
                 }
 
                 @Override
-                public void onFailure(@Nullable Call<Void> call, @Nullable Throwable t) {
+                public void onFailure(@Nullable Call<Void> call, @NonNull Throwable t) {
                     Log.i(TAG, "onFailure: " + t.getMessage());
                 }
             }, requestBody, modelsArr, partArr)).start();

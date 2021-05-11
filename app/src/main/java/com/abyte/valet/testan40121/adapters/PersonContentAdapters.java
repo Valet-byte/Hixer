@@ -51,7 +51,7 @@ public class PersonContentAdapters extends RecyclerView.Adapter<RecyclerView.Vie
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         List<ServerModel> content = contents.get(position);
 
-        ((MyViewHolder) holder).recyclerView.setAdapter(new ContentAdapter(context, content, resFragment, ID));
+        ((MyViewHolder) holder).recyclerView.setAdapter(new ContentPersonAdapter(context, content, resFragment, ID));
 
     }
 

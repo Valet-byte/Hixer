@@ -15,8 +15,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.abyte.valet.testan40121.activitys.MainActivity;
 import com.abyte.valet.testan40121.R;
+import com.abyte.valet.testan40121.activitys.MainActivity;
 import com.abyte.valet.testan40121.model.server_model.ServerModel;
 import com.abyte.valet.testan40121.rest.RetrofitClient;
 
@@ -24,7 +24,7 @@ import java.util.List;
 
 import static com.abyte.valet.testan40121.activitys.AddActivity.TAG;
 
-public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class ContentPersonAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private static class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -45,7 +45,7 @@ public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private final Context context;
     private final Integer ID;
 
-    public ContentAdapter(Context context, List<ServerModel> contents, Fragment fragment, Integer idThisFragment) {
+    public ContentPersonAdapter(Context context, List<ServerModel> contents, Fragment fragment, Integer idThisFragment) {
         this.context = context;
         this.contents = contents;
         this.inflater = LayoutInflater.from(context);
@@ -70,7 +70,7 @@ public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ((MyViewHolder) holder).imageView.setImageBitmap(content.getBitmap());
 
         ((MyViewHolder) holder).imageView.setOnClickListener((View v) -> {
-            Log.i(TAG, "onBindViewHolder: " + content.toString());
+                    Log.i(TAG, "onBindViewHolder: " + content.toString());
                     RetrofitClient.startDownloadByMainStats(content.getName());
                     Bundle bundle = new Bundle();
 

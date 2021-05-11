@@ -18,8 +18,8 @@ public class PersonDB extends SQLiteOpenHelper {
     public static final String DB_CREATED = "CREATE TABLE " + Contracts.PersonContract.TABLE_NAME +
             " (" + Contracts.PersonContract.COLUMN_ID +  " INTEGER PRIMARY KEY," +
             Contracts.PersonContract.COLUMN_NAME + " TEXT NOT NULL," +
-            Contracts.PersonContract.COLUMN_PASSWORD + " TEXT NOT NULL)";
-
+            Contracts.PersonContract.COLUMN_PASSWORD + " TEXT NOT NULL, " +
+            Contracts.PersonContract.COLUMN_PHOTO_NAME + " TEXT)";
     public static final String DROP_TABLE = "DROP TABLE " + Contracts.PersonContract.TABLE_NAME;
 
 
@@ -40,7 +40,7 @@ public class PersonDB extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addPerson(Person person){
+    public void addPerson(Person person, @Nullable String photoName){
 
         if (person != null) {
             SQLiteDatabase db = this.getWritableDatabase();
@@ -48,6 +48,7 @@ public class PersonDB extends SQLiteOpenHelper {
             cv.put(Contracts.PersonContract.COLUMN_NAME, person.getName());
             cv.put(Contracts.PersonContract.COLUMN_PASSWORD, person.getPassword());
             cv.put(Contracts.PersonContract.COLUMN_ID, person.getId());
+            if (photoName != null) cv.put(Contracts.PersonContract.COLUMN_PHOTO_NAME, photoName);
 
             db.delete(Contracts.PersonContract.TABLE_NAME, null, null);
             db.insert(Contracts.PersonContract.TABLE_NAME, null, cv);
@@ -55,7 +56,6 @@ public class PersonDB extends SQLiteOpenHelper {
     }
 
     public Person getPerson(){
-
         SQLiteDatabase db = this.getReadableDatabase();
         Person p = null;
 
@@ -78,6 +78,24 @@ public class PersonDB extends SQLiteOpenHelper {
         return p;
     }
 
+    public String getIconName(){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.query(Contracts.PersonContract.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+
+        if (cursor.moveToFirst()){
+            int index = cursor.getColumnIndex(Contracts.PersonContract.COLUMN_PHOTO_NAME);
+            return cursor.getString(index);
+        }
+        else {
+            return null;
+        }
+    }
     public void deletedPerson(){
         SQLiteDatabase db = getWritableDatabase();
         db.delete(Contracts.PersonContract.TABLE_NAME, null, null);

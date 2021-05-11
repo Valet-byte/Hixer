@@ -15,9 +15,21 @@
         android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp" />
+        <FrameLayout
+            android:layout_width="70dp"
+            android:layout_height="70dp">
+            <ImageView
+                android:id="@+id/iv_icon"
+                android:src="@color/white"
+                android:layout_width="70dp"
+                android:layout_height="70dp" />
+            <ImageView
+                android:src="@drawable/ic_fake_icon"
+                android:layout_width="70dp"
+                android:layout_height="70dp" />
+
+        </FrameLayout>
+
 
         <LinearLayout
             android:layout_width="0dp"
@@ -28,7 +40,7 @@
             <TextView
                 android:id="@+id/tv_nik"
                 android:layout_width="match_parent"
-                android:layout_height="25dp"
+                android:layout_height="50dp"
                 android:gravity="center"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
@@ -38,10 +50,10 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_out"
+            android:background="@drawable/ic_baseline_exit_to_app_24"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="out" />
+            android:layout_weight="2"/>
 
     </LinearLayout>
 
@@ -69,6 +81,7 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_add"
+        android:onClick="addContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
@@ -76,7 +89,8 @@
         app:srcCompat="@drawable/ic_add_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:backgroundTint="@color/my_orange" />
+        app:backgroundTint="@color/my_orange"
+        tools:ignore="OnClick" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

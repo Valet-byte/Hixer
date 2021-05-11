@@ -10,16 +10,21 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.View;
 
 import com.abyte.valet.testan40121.R;
+import com.abyte.valet.testan40121.fragments.PersonalFragment;
 import com.abyte.valet.testan40121.model.person.Person;
 import com.abyte.valet.testan40121.rest.RetrofitClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
 import java.util.Objects;
+
+import okhttp3.RequestBody;
 
 public class MainActivity extends AppCompatActivity {
     public static final String MSG_NAME = "Msg";
@@ -47,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         verifyStoragePermissions(this);
         person =  (Person) getIntent().getSerializableExtra(MSG_NAME);
         RetrofitClient.startDownload( this);
-
+        RetrofitClient.downloadIcon(person);
         Toolbar toolbar = findViewById(R.id.my_tool_bar);
 
         this.setSupportActionBar(toolbar);
@@ -68,5 +73,11 @@ public class MainActivity extends AppCompatActivity {
                     REQUEST_EXTERNAL_STORAGE
             );
         }
+    }
+
+    public void addContent(View view){
+        Intent i = new Intent(this, AddActivity.class);
+        i.putExtra(MainActivity.MSG_NAME, PersonalFragment.getType());
+        startActivity(i);
     }
 }

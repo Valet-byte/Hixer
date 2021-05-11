@@ -2,16 +2,15 @@ package com.abyte.valet.testan40121.adapters;
 
 import android.content.Context;
 
-import androidx.annotation.IdRes;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.abyte.valet.testan40121.R;
 import com.abyte.valet.testan40121.fragments.PlaceholderFragment;
-import com.google.android.material.tabs.TabLayout;
+
+import java.io.File;
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -25,7 +24,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public Fragment getItem(int position) {
+    public PlaceholderFragment getItem(int position) {
         return PlaceholderFragment.newInstance(mContext.getResources().getString(TAB_TITLES[position]));
     }
 

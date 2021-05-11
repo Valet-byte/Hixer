@@ -4,8 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.util.Log;
 
-import com.abyte.valet.testan40121.activitys.AddActivity;
-import com.abyte.valet.testan40121.activitys.MainActivity;
+import androidx.annotation.Nullable;
+
 import com.abyte.valet.testan40121.fragments.ArticleFragment;
 import com.abyte.valet.testan40121.fragments.IdeaFragment;
 import com.abyte.valet.testan40121.fragments.InfoFragment;
@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -37,17 +36,22 @@ import static com.abyte.valet.testan40121.activitys.AddActivity.TAG;
 public class RetrofitClient {
 
     private static ClientAPI clientAPI;
-    public static  List<ServerModel> projects, ideas, stats, projectsFromUser,
-            ideasFromUser, statsFromUser;
-    public static List<ServerModel> infoList;
+    public static  List<ServerModel>projects =  Collections.synchronizedList(new LinkedList<>()),
+    ideas = Collections.synchronizedList(new LinkedList<>()),
+    stats = Collections.synchronizedList(new LinkedList<>()),
+    infoList = Collections.synchronizedList(new ArrayList<>()),
+    projectsFromUser =  Collections.synchronizedList(new LinkedList<>()),
+    ideasFromUser = Collections.synchronizedList(new LinkedList<>()),
+    statsFromUser = Collections.synchronizedList(new LinkedList<>());
     @SuppressLint("StaticFieldLeak")
     public static Activity activityRetroFit;
     private RetrofitClient() { }
 
     public static void registrationUser(Callback<Person> callback,
-                                        String name, String password){
+                                        String name, String password,
+                                        RequestBody icon, MultipartBody.Part part){
         if (clientAPI == null) { dropAll(); }
-        clientAPI.addUser(name, password).enqueue(callback);
+        clientAPI.addUser(name, password, icon, part).enqueue(callback);
     }
 
     public static void findUser(Callback<Person> callback,
@@ -60,10 +64,23 @@ public class RetrofitClient {
                                     RequestBody description,
                                     ServerModel[] models,
                                     MultipartBody.Part... parts){
+        if (clientAPI == null) { dropAll();}
+        clientAPI.uploadContents(description, models, parts).enqueue(callback);}
+    public static void uploadIcon(RequestBody info,
+                                  MultipartBody.Part icon){
+        if (clientAPI == null) { dropAll();}
+        clientAPI.uploadIcon(info, icon).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(@Nullable Call<Void> call, @Nullable Response<Void> response) {
 
-        if (clientAPI == null) { dropAll(); }
-        clientAPI.uploadPhoto(description, models, parts).enqueue(callback);}
+            }
 
+            @Override
+            public void onFailure(@Nullable Call<Void> call, @Nullable Throwable t) {
+
+            }
+        });
+    }
 
 
     public static void startDownload( Activity activity) {
@@ -71,95 +88,79 @@ public class RetrofitClient {
         activityRetroFit = activity;
         new Thread(()->{
             try {
+                ideas.addAll(Objects.requireNonNull(clientAPI.getModel(2).execute().body()));
                 projects.addAll( Objects.requireNonNull(clientAPI.getModel(1).execute().body()));
+                stats.addAll(Objects.requireNonNull(clientAPI.getModel(3).execute().body()));
+
                 synchronized(projects) {
                     for (ServerModel project : projects) {
                         if (project.getPhoto() != null)
                             project.setBitmap(clientAPI.getPhoto(project.getPhoto()).execute().body().byteStream());
                     }
                 }
-
-                activityRetroFit.runOnUiThread(ProjectsFragment::invalidate);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
-        new Thread(()->{
-            try {
-                ideas.addAll(clientAPI.getModel( 2).execute().body());
-
                 synchronized (ideas){
                     for (ServerModel project : ideas) {
                         if (project.getPhoto() != null)project.setBitmap(clientAPI.getPhoto(project.getPhoto()).execute().body().byteStream());
                     }
                 }
 
-                activityRetroFit.runOnUiThread(IdeaFragment::invalidate);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
-        new Thread(()->{
-            try {
-                stats.addAll(clientAPI.getModel( 3).execute().body());
                 synchronized (stats){
                     for (ServerModel project : stats) {
                         if (project.getPhoto() != null)project.setBitmap(clientAPI.getPhoto(project.getPhoto()).execute().body().byteStream());
                     }
                 }
+
+                activityRetroFit.runOnUiThread(ProjectsFragment::invalidate);
+                activityRetroFit.runOnUiThread(IdeaFragment::invalidate);
                 activityRetroFit.runOnUiThread(ArticleFragment::invalidate);
+
             } catch (IOException e) {
                 e.printStackTrace();
-            }
-        }).start();
-    }
 
+        }
+    }).start();
+
+    }
     public static void startDownloadByUserID(Long id, Activity activity){
         activityRetroFit = activity;
         if (clientAPI == null) { dropAll(); }
         new Thread(()->{
             try {
                 projectsFromUser.addAll(Objects.requireNonNull(clientAPI.getModelsByID(id, 1).execute().body()));
+                ideasFromUser.addAll(Objects.requireNonNull(clientAPI.getModelsByID(id, 2).execute().body()));
+                statsFromUser.addAll(Objects.requireNonNull(clientAPI.getModelsByID(id, 3).execute().body()));
+
                 synchronized (projectsFromUser){
                     for (ServerModel project : projectsFromUser) {
                         if (project.getPhoto() != null)project.setBitmap(Objects.requireNonNull(clientAPI.getPhoto(project.getPhoto()).execute().body()).byteStream());
                     }
                 }
-                activityRetroFit.runOnUiThread(PersonalFragment::invalidate);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
-        new Thread(()->{
-            try {
-                ideasFromUser.addAll(Objects.requireNonNull(clientAPI.getModelsByID(id, 2).execute().body()));
 
                 synchronized (ideasFromUser) {
                     for (ServerModel project : ideasFromUser) {
                         if (project.getPhoto() != null)project.setBitmap(Objects.requireNonNull(clientAPI.getPhoto(project.getPhoto()).execute().body()).byteStream());
                     }
                 }
-                activityRetroFit.runOnUiThread(PersonalFragment::invalidate);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
-        new Thread(()->{
-            try {
-                statsFromUser.addAll(clientAPI.getModelsByID( id,3).execute().body());
+
                 synchronized (statsFromUser) {
                     for (ServerModel project : statsFromUser) {
                         if (project.getPhoto() != null)project.setBitmap(clientAPI.getPhoto(project.getPhoto()).execute().body().byteStream());
                     }
                 }
+
+
+                activityRetroFit.runOnUiThread(PersonalFragment::invalidate);
+                activityRetroFit.runOnUiThread(PersonalFragment::invalidate);
                 activityRetroFit.runOnUiThread(PersonalFragment::invalidate);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }).start();
-    }
 
+
+
+        }).start();
+
+    }
     public static void startDownloadByMainStats(String mainName){
         new Thread(()->{
             try {
@@ -194,6 +195,17 @@ public class RetrofitClient {
         projectsFromUser =  Collections.synchronizedList(new LinkedList<>());
         ideasFromUser = Collections.synchronizedList(new LinkedList<>());
         statsFromUser = Collections.synchronizedList(new LinkedList<>());
+    }
+
+    public static void downloadIcon(Person person) {
+        if (clientAPI == null) { dropAll(); }
+        new Thread(()->{
+            try {
+                person.setPhoto(Objects.requireNonNull(clientAPI.getIcon(person.getPhotoName()).execute().body()).byteStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 }
 

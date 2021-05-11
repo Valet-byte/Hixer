@@ -1,17 +1,40 @@
 package com.abyte.valet.testan40121.model.person;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import androidx.annotation.NonNull;
+
+import java.io.File;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 
 public class Person implements Serializable {
-    private Long id;
-    private String name;
-    private String password;
+    private final Long id;
+    private final String name;
+    private final String password;
+    private String photoName;
+    private Bitmap photo;
+
+    public void setPhotoName(String photoName) {
+        this.photoName = photoName;
+    }
+
+    public void setPhoto(InputStream stream) {
+        this.photo = BitmapFactory.decodeStream(stream);
+    }
+
+    public String getPhotoName() {
+        return photoName;
+    }
 
     public Person(Long id, String name, String password) {
         this.id = id;
         this.name = name;
         this.password = password;
     }
+
 
     public Long getId() {
         return id;
@@ -25,18 +48,11 @@ public class Person implements Serializable {
         return password;
     }
 
-    public void clone(Person p) {
-        this.id = p.getId();
-        this.name = p.getName();
-        this.password = p.getPassword();
+    public Bitmap getPhoto() {
+        return photo;
     }
 
-    public void cloneAndArguments(Person p, Long id) {
-        this.id = id;
-        this.name = p.getName();
-        this.password = p.getPassword();
-    }
-
+    @NonNull
     @Override
     public String toString() {
         return "Person{" +
@@ -65,5 +81,4 @@ public class Person implements Serializable {
         result = 31 * result + (password != null ? password.hashCode() : 0);
         return result;
     }
-
 }

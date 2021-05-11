@@ -2,6 +2,7 @@ package com.abyte.valet.testan40121.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,22 +22,7 @@ import java.util.List;
 
 public class ArticleFragment extends Fragment {
 
-    private List<ServerModel> contents;
     private static ArticleAdapter articleAdapter;
-
-    public static Fragment getInstance(LinkedList<ServerModel> articles) {
-        Bundle b = new Bundle();
-        ProjectsFragment fragment = new ProjectsFragment();
-        b.putSerializable(MainActivity.MSG_NAME, articles);
-        fragment.setArguments(b);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        contents = RetrofitClient.stats;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,13 +30,19 @@ public class ArticleFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_article, container, false);
 
-        articleAdapter = new ArticleAdapter(contents, getContext(), this);
+        if (articleAdapter == null) articleAdapter = new ArticleAdapter(RetrofitClient.stats, getContext(), this);
 
         RecyclerView recyclerView = view.findViewById(R.id.article_rv);
 
         recyclerView.setAdapter(articleAdapter);
 
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
     }
 
     public static void invalidate(){

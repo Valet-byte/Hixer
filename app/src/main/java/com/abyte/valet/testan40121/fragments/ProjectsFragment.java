@@ -21,9 +21,7 @@ public class ProjectsFragment extends Fragment {
     public static ContentAdapter contentAdapter;
     private RecyclerView recyclerView;
 
-    public static void invalidate() {
-        if (contentAdapter != null) contentAdapter.notifyDataSetChanged();
-    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,17 +31,15 @@ public class ProjectsFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.rv_content);
 
+        contentAdapter = new ContentAdapter(getContext(), RetrofitClient.projects, this, R.id.projectsFragment2);
+
+        recyclerView.setAdapter(contentAdapter);
+
         return view;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        List<ServerModel> contents = RetrofitClient.projects;
-        if (contents != null){
-            contentAdapter = new ContentAdapter(getContext(), contents, this, R.id.projectsFragment2);
-            recyclerView.setAdapter(contentAdapter);
-        }
+    public static void invalidate() {
+        if (contentAdapter != null) contentAdapter.notifyDataSetChanged();
     }
 
     public static void dropAdapter() {if (contentAdapter != null) contentAdapter = null;}

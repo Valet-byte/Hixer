@@ -22,8 +22,8 @@ public interface ClientAPI {
     Call<Person> findPersons(@Field("name") String name,
                              @Field("pass") String pass);
     @Multipart
-    @POST("./uploadPhoto")
-    Call<Void> uploadPhoto(@Part("description") RequestBody description,
+    @POST("./uploadContents")
+    Call<Void> uploadContents(@Part("description") RequestBody description,
                            @Part("models") ServerModel[] models,
                            @Part MultipartBody.Part... photo);
 
@@ -37,6 +37,11 @@ public interface ClientAPI {
     Call<ResponseBody> getPhoto(@Field("name") String name);
 
     @FormUrlEncoded
+    @POST("/getIcon")
+    Call<ResponseBody> getIcon(@Field("name") String name);
+
+
+    @FormUrlEncoded
     @POST("./getModel")
     Call<LinkedList<ServerModel>> getModel(@Field("type") Integer type);
 
@@ -44,9 +49,13 @@ public interface ClientAPI {
     @POST("/getAllModelsByMainName")
     Call<LinkedList<ServerModel>> getAllModels(@Field("mainName") String mainName);
 
-    @FormUrlEncoded
-    @POST("/addUser")
-    Call<Person> addUser(@Field("name") String name,
-                         @Field("pass") String pass);
-
+    @Multipart
+    @POST("./addUser")
+    Call<Person> addUser(@Part("name") String name,
+                         @Part("pass") String pass,
+                         @Part("icon") RequestBody info,
+                         @Part MultipartBody.Part file);
+    @Multipart
+    @POST("./uploadIcon")
+    Call<Void> uploadIcon(@Part("description") RequestBody info, @Part MultipartBody.Part icon);
 }

@@ -9,6 +9,7 @@ public class Contracts {
         public static final String COLUMN_ID = "_id";
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_PASSWORD = "password";
-        public static final int DB_VERSION = 3;
+        public static final String COLUMN_PHOTO_NAME = "photo_name";
+        public static final int DB_VERSION = 4;
     }
 }
