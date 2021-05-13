@@ -1,5 +1,6 @@
 package com.abyte.valet.testan40121.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,17 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.abyte.valet.testan40121.R;
-import com.abyte.valet.testan40121.activitys.MainActivity;
 import com.abyte.valet.testan40121.adapters.ArticleAdapter;
 import com.abyte.valet.testan40121.rest.RetrofitClient;
-import com.abyte.valet.testan40121.model.server_model.ServerModel;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public class ArticleFragment extends Fragment {
 
+    @SuppressLint("StaticFieldLeak")
     private static ArticleAdapter articleAdapter;
+    private RecyclerView recyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,9 +28,9 @@ public class ArticleFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_article, container, false);
 
-        if (articleAdapter == null) articleAdapter = new ArticleAdapter(RetrofitClient.stats, getContext(), this);
+        articleAdapter = new ArticleAdapter(RetrofitClient.stats, getContext(), this);
 
-        RecyclerView recyclerView = view.findViewById(R.id.article_rv);
+        recyclerView = view.findViewById(R.id.article_rv);
 
         recyclerView.setAdapter(articleAdapter);
 
@@ -40,9 +38,20 @@ public class ArticleFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        try {
+            recyclerView.setScrollingTouchSlop(savedInstanceState.getInt("Position"));
+        } catch (Exception ignored){
 
+        }
+
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putInt("Position", recyclerView.getScrollState());
+        super.onSaveInstanceState(outState);
     }
 
     public static void invalidate(){

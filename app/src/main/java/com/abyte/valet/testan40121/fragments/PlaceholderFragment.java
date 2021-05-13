@@ -34,7 +34,6 @@ import java.util.Objects;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -132,7 +131,8 @@ public class PlaceholderFragment extends Fragment {
 
                     @Override
                     public void onFailure(@NonNull Call<Person> call, @Nullable Throwable t) {
-                        Snackbar.make(login, t.getMessage(), BaseTransientBottomBar.LENGTH_INDEFINITE).show();
+                        Snackbar.make(login, t.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
+                        Log.i(TAG, "onFailure: " + t.getMessage());
                     }
 
                 }, p.getName(), p.getPassword());

@@ -15,12 +15,20 @@ import com.abyte.valet.testan40121.model.person.Person;
 import com.abyte.valet.testan40121.model.server_model.ServerModel;
 
 import java.io.IOException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -184,10 +192,7 @@ public class RetrofitClient {
         infoList.clear();
     }
     public static void dropAll(){
-        OkHttpClient client = new OkHttpClient.Builder().build();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://192.168.1.111:8080")
-                .addConverterFactory(GsonConverterFactory.create()).client(client).build();
-        clientAPI = retrofit.create(ClientAPI.class);
+        clientAPI = RestAdapter.getApiClient();
         projects =  Collections.synchronizedList(new LinkedList<>());
         ideas = Collections.synchronizedList(new LinkedList<>());
         stats = Collections.synchronizedList(new LinkedList<>());
@@ -196,7 +201,6 @@ public class RetrofitClient {
         ideasFromUser = Collections.synchronizedList(new LinkedList<>());
         statsFromUser = Collections.synchronizedList(new LinkedList<>());
     }
-
     public static void downloadIcon(Person person) {
         if (clientAPI == null) { dropAll(); }
         new Thread(()->{
@@ -206,6 +210,71 @@ public class RetrofitClient {
                 e.printStackTrace();
             }
         }).start();
+    }
+    public static class RestAdapter {
+
+        private static Retrofit retrofit = null;
+        private static ClientAPI apiInterface;
+
+        public static OkHttpClient.Builder getUnsafeOkHttpClient() {
+            try {
+                final TrustManager[] trustAllCerts = new TrustManager[]{
+                        new X509TrustManager() {
+                            @Override
+                            public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                            }
+
+                            @Override
+                            public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                            }
+
+                            @Override
+                            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                                return new java.security.cert.X509Certificate[]{};
+                            }
+                        }
+                };
+
+                final SSLContext sslContext = SSLContext.getInstance("SSL");
+                sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+
+                final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+
+                OkHttpClient.Builder builder = new OkHttpClient.Builder();
+                builder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
+                builder.hostnameVerifier(new HostnameVerifier() {
+                    @Override
+                    public boolean verify(String hostname, SSLSession session) {
+                        return true;
+                    }
+                });
+                return builder;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        public static ClientAPI getApiClient() {
+            if (apiInterface == null) {
+
+                try {
+                    retrofit = new Retrofit.Builder()
+                            .baseUrl("https://192.168.1.111:8080")
+                            .client(getUnsafeOkHttpClient().build())
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
+
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+                }
+
+
+                apiInterface = retrofit.create(ClientAPI.class);
+            }
+            return apiInterface;
+        }
+
     }
 }
 

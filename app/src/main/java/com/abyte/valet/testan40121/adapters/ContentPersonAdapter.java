@@ -76,7 +76,6 @@ public class ContentPersonAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                     bundle.putSerializable(MainActivity.MSG_NAME, content);
                     bundle.putInt(MainActivity.MSG_ID_BACK_FRAGMENT, ID);
-
                     NavHostFragment.findNavController(resFragment).navigate(R.id.infoFragment, bundle);
                 }
         );

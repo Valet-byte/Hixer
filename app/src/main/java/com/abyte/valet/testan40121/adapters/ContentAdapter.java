@@ -81,7 +81,9 @@ public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
         );
 
-        if (position == contents.size() - 3) {
+
+
+        if (position == contents.size() - 1) {
             RetrofitClient.startDownload((Activity) context);
         }
 

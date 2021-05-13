@@ -79,7 +79,7 @@ public class PersonDB extends SQLiteOpenHelper {
     }
 
     public String getIconName(){
-        SQLiteDatabase db = getReadableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(Contracts.PersonContract.TABLE_NAME,
                 null,
                 null,

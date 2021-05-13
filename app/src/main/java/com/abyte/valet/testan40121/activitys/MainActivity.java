@@ -24,8 +24,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Objects;
 
-import okhttp3.RequestBody;
-
 public class MainActivity extends AppCompatActivity {
     public static final String MSG_NAME = "Msg";
     public static final String MSG_POS = "Position";
@@ -73,11 +71,5 @@ public class MainActivity extends AppCompatActivity {
                     REQUEST_EXTERNAL_STORAGE
             );
         }
-    }
-
-    public void addContent(View view){
-        Intent i = new Intent(this, AddActivity.class);
-        i.putExtra(MainActivity.MSG_NAME, PersonalFragment.getType());
-        startActivity(i);
     }
 }

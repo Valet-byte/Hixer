@@ -7,6 +7,7 @@
     tools:context=".fragments.ArticleFragment">
 
     <androidx.recyclerview.widget.RecyclerView
+        stateRestorationPolicy = "PREVENT_WHEN_EMPTY"
         android:id="@+id/article_rv"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_width="match_parent"

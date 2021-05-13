@@ -68,18 +68,17 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ((ArticleAdapter.MyViewHolder) holder).imageView.setImageBitmap(content.getBitmap());
 
             ((ArticleAdapter.MyViewHolder) holder).imageView.setOnClickListener((View v) -> {
+                RetrofitClient.startDownloadByMainStats(content.getName());
 
-                        Bundle bundle = new Bundle();
+                Bundle bundle = new Bundle();
 
-                        bundle.putSerializable(MainActivity.MSG_NAME, content);
-                        bundle.putInt(MainActivity.MSG_ID_BACK_FRAGMENT, R.id.articleFragment2);
-                        bundle.putInt(MainActivity.MSG_POS, position);
-
-                        NavHostFragment.findNavController(resFragment).navigate(R.id.infoFragment, bundle);
-                    }
+                bundle.putSerializable(MainActivity.MSG_NAME, content);
+                bundle.putInt(MainActivity.MSG_ID_BACK_FRAGMENT, R.id.articleFragment2);
+                NavHostFragment.findNavController(resFragment).navigate(R.id.infoFragment, bundle);
+            }
             );
 
-            if (position == contents.size()){
+            if (position == contents.size() - 1){
                 RetrofitClient.startDownload((Activity) context);
             }
         }

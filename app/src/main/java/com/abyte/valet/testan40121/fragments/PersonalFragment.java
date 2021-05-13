@@ -1,6 +1,7 @@
 package com.abyte.valet.testan40121.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.abyte.valet.testan40121.activitys.AddActivity;
 import com.abyte.valet.testan40121.adapters.PersonContentAdapters;
 import com.abyte.valet.testan40121.model.server_model.ServerModel;
 import com.abyte.valet.testan40121.rest.RetrofitClient;
@@ -28,16 +30,11 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.abyte.valet.testan40121.activitys.AddActivity.TAG;
-
-
 @SuppressLint("StaticFieldLeak")
 public class PersonalFragment extends Fragment {
 
     private static PersonContentAdapters adapter;
     private static Integer typeContent;
-    private static ImageView icon;
-    private static View saveView;
 
     public static Integer getType() {
         return typeContent;
@@ -47,9 +44,7 @@ public class PersonalFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.i("MyTag", "onCreateView");
-        View view;
-        if (saveView == null) {
-            view = inflater.inflate(R.layout.fragment_personal, container, false);
+        View view = inflater.inflate(R.layout.fragment_personal, container, false);
             TextView login = view.findViewById(R.id.tv_nik);
             List<List<ServerModel>> contents = new ArrayList<>();
             contents.add(RetrofitClient.projectsFromUser);
@@ -59,7 +54,12 @@ public class PersonalFragment extends Fragment {
                 adapter = new PersonContentAdapters(contents, getActivity(), this, R.id.personalFragment2);
             login.setText(MainActivity.person.getName());
             view.findViewById(R.id.btn_out).setOnClickListener(v -> onSaveAndStop());
-            icon = view.findViewById(R.id.iv_icon);
+            view.findViewById(R.id.btn_add).setOnClickListener(v -> {
+                Intent i = new Intent(getActivity(), AddActivity.class);
+                i.putExtra(MainActivity.MSG_NAME, getType());
+                startActivity(i);
+            });
+        ImageView icon = view.findViewById(R.id.iv_icon);
             icon.setImageBitmap(MainActivity.person.getPhoto());
 
             TabLayout tabLayout = view.findViewById(R.id.tab);
@@ -90,11 +90,6 @@ public class PersonalFragment extends Fragment {
                 }
             });
             mediator.attach();
-            saveView = view;
-        }
-        else {
-            view = saveView;
-        }
         return view;
     }
 
