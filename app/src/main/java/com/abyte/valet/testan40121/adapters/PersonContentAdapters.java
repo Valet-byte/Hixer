@@ -17,7 +17,7 @@ import java.util.List;
 public class PersonContentAdapters extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final List<List<ServerModel>> contents;
     private final LayoutInflater inflater;
-    private final Fragment resFragment;
+    private Fragment resFragment;
     private final Context context;
     private final Integer ID;
 
@@ -27,6 +27,10 @@ public class PersonContentAdapters extends RecyclerView.Adapter<RecyclerView.Vie
         this.contents = contents;
         this.context = context;
         ID = idThisFragment;
+    }
+
+    public void updateResFragment(Fragment fragment) {
+        resFragment = fragment;
     }
 
     private static class MyViewHolder extends RecyclerView.ViewHolder{

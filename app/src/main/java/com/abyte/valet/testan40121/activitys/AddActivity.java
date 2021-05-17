@@ -48,6 +48,7 @@ public class AddActivity extends AppCompatActivity {
     private LinkedList<ServerModel> models;
     public static final String TAG = "MyTag";
     private Integer type;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -24,7 +24,7 @@ import java.util.List;
 
 import static com.abyte.valet.testan40121.activitys.AddActivity.TAG;
 
-public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class ProjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private static class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -33,7 +33,7 @@ public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            info = itemView.findViewById(R.id.tv_author);
+            info = itemView.findViewById(R.id.tv_name);
             name = itemView.findViewById(R.id.tv_s);
             imageView = itemView.findViewById(R.id.img);
         }
@@ -45,7 +45,7 @@ public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private final Context context;
     private final Integer ID;
 
-    public ContentAdapter(Context context, List<ServerModel> contents, Fragment fragment, Integer idThisFragment) {
+    public ProjectAdapter(Context context, List<ServerModel> contents, Fragment fragment, Integer idThisFragment) {
         this.context = context;
         this.contents = contents;
         this.inflater = LayoutInflater.from(context);
@@ -71,10 +71,9 @@ public class ContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         ((MyViewHolder) holder).imageView.setOnClickListener((View v) -> {
             Log.i(TAG, "onBindViewHolder: " + content.toString());
-                    RetrofitClient.startDownloadByMainStats(content.getName());
                     Bundle bundle = new Bundle();
 
-                    bundle.putSerializable(MainActivity.MSG_NAME, content);
+                    bundle.putString(MainActivity.MSG_NAME, content.getName());
                     bundle.putInt(MainActivity.MSG_ID_BACK_FRAGMENT, ID);
 
                     NavHostFragment.findNavController(resFragment).navigate(R.id.infoFragment, bundle);

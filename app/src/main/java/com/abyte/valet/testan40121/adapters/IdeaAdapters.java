@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,21 +39,21 @@ public class IdeaAdapters extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         final ImageView logo;
         final TextView name, info;
-        final LinearLayout layout;
+        final View view;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            info = itemView.findViewById(R.id.tv_info);
-            name = itemView.findViewById(R.id.tv_author);
-            logo = itemView.findViewById(R.id.iv_logo);
-            layout = itemView.findViewById(R.id.ll_main);
+            info = itemView.findViewById(R.id.tv_s);
+            name = itemView.findViewById(R.id.tv_name);
+            logo = itemView.findViewById(R.id.img);
+            view = itemView;
         }
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.list_idea_item, parent, false);
+        View view = inflater.inflate(R.layout.list_item, parent, false);
 
         return new MyViewHolder(view);
     }
@@ -68,14 +67,12 @@ public class IdeaAdapters extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         ((MyViewHolder) holder).info.setText(content.getInfo());
         ((MyViewHolder) holder).name.setText(content.getName());
 
-        ((MyViewHolder) holder).layout.setOnClickListener((View v) -> {
+        ((MyViewHolder) holder).view.setOnClickListener((View v) -> {
             RetrofitClient.startDownloadByMainStats(content.getName());
             Bundle bundle = new Bundle();
-            bundle.putSerializable(MainActivity.MSG_NAME, content);
+            bundle.putString(MainActivity.MSG_NAME, content.getName());
             bundle.putInt(MainActivity.MSG_ID_BACK_FRAGMENT, R.id.ideaFragment2);
-            bundle.putInt(MainActivity.MSG_POS, position);
 
-            NavHostFragment.findNavController(resFragment).popBackStack(R.id.infoFragment, true);
             NavHostFragment.findNavController(resFragment).navigate(R.id.infoFragment, bundle);
 
         });

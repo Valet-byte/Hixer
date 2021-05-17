@@ -33,8 +33,8 @@ public class ContentPersonAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            info = itemView.findViewById(R.id.tv_author);
-            name = itemView.findViewById(R.id.tv_s);
+            info = itemView.findViewById(R.id.tv_s);
+            name = itemView.findViewById(R.id.tv_name);
             imageView = itemView.findViewById(R.id.img);
         }
     }
@@ -71,10 +71,9 @@ public class ContentPersonAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         ((MyViewHolder) holder).imageView.setOnClickListener((View v) -> {
                     Log.i(TAG, "onBindViewHolder: " + content.toString());
-                    RetrofitClient.startDownloadByMainStats(content.getName());
                     Bundle bundle = new Bundle();
 
-                    bundle.putSerializable(MainActivity.MSG_NAME, content);
+                    bundle.putString(MainActivity.MSG_NAME, content.getName());
                     bundle.putInt(MainActivity.MSG_ID_BACK_FRAGMENT, ID);
                     NavHostFragment.findNavController(resFragment).navigate(R.id.infoFragment, bundle);
                 }

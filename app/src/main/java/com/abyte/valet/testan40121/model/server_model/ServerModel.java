@@ -1,6 +1,5 @@
 package com.abyte.valet.testan40121.model.server_model;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -10,11 +9,10 @@ import com.google.gson.annotations.SerializedName;
 import java.io.InputStream;
 import java.io.Serializable;
 
-
 public class ServerModel implements Serializable {
     @SerializedName("type")
     @Expose
-    private Integer type;
+    private final Integer type;
     @SerializedName("ID")
     @Expose
     private Long ID;
@@ -33,6 +31,7 @@ public class ServerModel implements Serializable {
     @SerializedName("photo")
     @Expose
     private String photo;
+
     private Bitmap bitmap;
 
     public Integer getType() {

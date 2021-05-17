@@ -16,10 +16,7 @@ import android.widget.TextView;
 import com.abyte.valet.testan40121.activitys.MainActivity;
 import com.abyte.valet.testan40121.R;
 import com.abyte.valet.testan40121.adapters.ContentsAdapter;
-import com.abyte.valet.testan40121.model.server_model.ServerModel;
 import com.abyte.valet.testan40121.rest.RetrofitClient;
-
-import java.util.LinkedList;
 
 public class InfoFragment extends Fragment {
 
@@ -27,20 +24,22 @@ public class InfoFragment extends Fragment {
     private static ContentsAdapter contentsAdapter;
 
     public static void invalidate() {
-        if (contentsAdapter != null) contentsAdapter.notifyDataSetChanged();
+         contentsAdapter.notifyDataSetChanged();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_info, container, false);
+        RetrofitClient.startDownloadByMainStats( getArguments().getString(MainActivity.MSG_NAME));
 
         TextView textLogo = view.findViewById(R.id.logo_text);
-        contentsAdapter = new ContentsAdapter(RetrofitClient.infoList, getActivity());
-        RecyclerView recyclerView = view.findViewById(R.id.rv_list);
 
-        textLogo.setText(((ServerModel) getArguments().getSerializable(MainActivity.MSG_NAME)).getName());
+        if(contentsAdapter == null) contentsAdapter = new ContentsAdapter(RetrofitClient.infoList, getActivity());
+        RecyclerView recyclerView = view.findViewById(R.id.rv_list);
         recyclerView.setAdapter(contentsAdapter);
+
+        textLogo.setText(getArguments().getString(MainActivity.MSG_NAME));
 
         ImageView btnBack = view.findViewById(R.id.btn_back_add);
 
@@ -53,5 +52,8 @@ public class InfoFragment extends Fragment {
 
         return view;
     }
-    public static void dropAdapter() {if (contentsAdapter != null) contentsAdapter = null;}
+
+    public static void dropAdapter(){
+        contentsAdapter = null;
+    }
 }

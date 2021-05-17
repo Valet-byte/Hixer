@@ -34,68 +34,69 @@ import java.util.List;
 public class PersonalFragment extends Fragment {
 
     private static PersonContentAdapters adapter;
-    private static Integer typeContent;
+    private static Integer typeContent = 0;
 
-    public static Integer getType() {
-        return typeContent;
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.i("MyTag", "onCreateView");
         View view = inflater.inflate(R.layout.fragment_personal, container, false);
-            TextView login = view.findViewById(R.id.tv_nik);
-            List<List<ServerModel>> contents = new ArrayList<>();
-            contents.add(RetrofitClient.projectsFromUser);
-            contents.add(RetrofitClient.ideasFromUser);
-            contents.add(RetrofitClient.statsFromUser);
-            if (adapter == null)
-                adapter = new PersonContentAdapters(contents, getActivity(), this, R.id.personalFragment2);
-            login.setText(MainActivity.person.getName());
-            view.findViewById(R.id.btn_out).setOnClickListener(v -> onSaveAndStop());
-            view.findViewById(R.id.btn_add).setOnClickListener(v -> {
-                Intent i = new Intent(getActivity(), AddActivity.class);
-                i.putExtra(MainActivity.MSG_NAME, getType());
-                startActivity(i);
-            });
+        TextView login = view.findViewById(R.id.tv_nik);
+        List<List<ServerModel>> contents = new ArrayList<>();
+        contents.add(RetrofitClient.projectsFromUser);
+        contents.add(RetrofitClient.ideasFromUser);
+        contents.add(RetrofitClient.statsFromUser);
+        if (adapter == null)
+            adapter = new PersonContentAdapters(contents, getActivity(), this, R.id.personalFragment2);
+        else adapter.updateResFragment(this);
+        login.setText(MainActivity.person.getName());
+        view.findViewById(R.id.btn_out).setOnClickListener(v -> onSaveAndStop());
+
+        view.findViewById(R.id.btn_add).setOnClickListener(v -> {
+            Intent i = new Intent(getActivity(), AddActivity.class);
+            i.putExtra(MainActivity.MSG_NAME, typeContent);
+            startActivity(i);
+        });
+
+
         ImageView icon = view.findViewById(R.id.iv_icon);
-            icon.setImageBitmap(MainActivity.person.getPhoto());
+        icon.setImageBitmap(MainActivity.person.getPhoto());
 
-            TabLayout tabLayout = view.findViewById(R.id.tab);
+        TabLayout tabLayout = view.findViewById(R.id.tab);
 
-            ViewPager2 viewPager2 = view.findViewById(R.id.pager2);
-            viewPager2.setAdapter(adapter);
+        ViewPager2 viewPager2 = view.findViewById(R.id.pager2);
+        viewPager2.setAdapter(adapter);
 
-
-            viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-                @Override
-                public void onPageSelected(int position) { typeContent = position + 1; }
-            });
-
-            TabLayoutMediator mediator =  new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
-                switch (position){
-                    case 0:{
-                        tab.setText("projects");
-                        break;
-                    }
-                    case 1:{
-                        tab.setText("ideas");
-                        break;
-                    }
-                    case 2:{
-                        tab.setText("articles");
-                        break;
-                    }
+        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) { typeContent = position + 1; }
+        });
+        if(typeContent != 0)viewPager2.setCurrentItem(typeContent - 1);
+        TabLayoutMediator mediator =  new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
+            switch (position){
+                case 0:{
+                    tab.setText("projects");
+                    break;
                 }
-            });
-            mediator.attach();
+                case 1:{
+                    tab.setText("ideas");
+                    break;
+                }
+                case 2:{
+                    tab.setText("articles");
+                    break;
+                }
+            }
+        });
+        mediator.attach();
         return view;
     }
 
     private void onSaveAndStop(){
         PersonDB db = new PersonDB(getActivity());
         db.deletedPerson();
+        typeContent = 0;
         requireActivity().setResult(2);
         RetrofitClient.dropAll();
         dropAdapter();

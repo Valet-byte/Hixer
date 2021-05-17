@@ -1,9 +1,11 @@
 package com.abyte.valet.testan40121.activitys;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,15 +15,23 @@ import android.widget.ImageView;
 
 import com.abyte.valet.testan40121.R;
 import com.abyte.valet.testan40121.adapters.SectionsPagerAdapter;
+import com.abyte.valet.testan40121.db.PersonDB;
 import com.abyte.valet.testan40121.fragments.PlaceholderFragment;
+import com.abyte.valet.testan40121.model.person.Person;
+import com.abyte.valet.testan40121.rest.RetrofitClient;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RegActivity extends AppCompatActivity {
 
     public static final int REQUEST_ICON = 5;
     private ImageView imageViewIcon;
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -40,11 +50,21 @@ public class RegActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reg);
 
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        ViewPager viewPager = findViewById(R.id.view_pager);
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this);
+        ViewPager2 viewPager = findViewById(R.id.view_pager);
+        TabLayout tabLayout = findViewById(R.id.tabs);
         viewPager.setAdapter(sectionsPagerAdapter);
-        TabLayout tabs = findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);
+        TabLayoutMediator mediator = new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+            switch (position){
+                case 0:
+                    tab.setText("Войти");
+                    break;
+                case 1:
+                    tab.setText("Регистрация");
+                    break;
+            }
+        });
+        mediator.attach();
 
     }
 
@@ -53,5 +73,32 @@ public class RegActivity extends AppCompatActivity {
         Intent i = new Intent(Intent.ACTION_GET_CONTENT);
         i.setType("image/*");
         startActivityForResult(i, REQUEST_ICON);
+    }
+
+    public static void registration(Activity activity, PersonDB db, RequestBody body,
+                                    MultipartBody.Part part, String name, String password){
+        RetrofitClient.registrationUser(new Callback<Person>() {
+            @Override
+            public void onResponse(@NonNull Call<Person> call, @NonNull Response<Person> response) {
+                activity.runOnUiThread(() -> {
+                    Person person = response.body();
+                    if (person != null) {
+                        db.addPerson(person, person.getPhotoName());
+                        Intent i = new Intent(activity, MainActivity.class);
+                        MainActivity.setPerson(person);
+                        RetrofitClient.startDownload(activity);
+                        RetrofitClient.startDownloadByUserID(person.getId(), activity);
+                        activity.startActivityForResult(i, MainActivity.R_CODE);
+
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Person> call, @NonNull Throwable t) {
+
+            }
+        }, name, password, body, part);
+
     }
 }

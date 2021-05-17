@@ -20,7 +20,6 @@ import com.abyte.valet.testan40121.rest.RetrofitClient;
 import com.abyte.valet.testan40121.model.server_model.ServerModel;
 
 import java.io.Serializable;
-import java.util.LinkedList;
 import java.util.List;
 
 public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Serializable {
@@ -45,7 +44,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            name = itemView.findViewById(R.id.tv_author);
+            name = itemView.findViewById(R.id.tv_name);
             info = itemView.findViewById(R.id.tv_s);
             imageView = itemView.findViewById(R.id.img);
         }
@@ -72,7 +71,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
                 Bundle bundle = new Bundle();
 
-                bundle.putSerializable(MainActivity.MSG_NAME, content);
+                bundle.putString(MainActivity.MSG_NAME, content.getName());
                 bundle.putInt(MainActivity.MSG_ID_BACK_FRAGMENT, R.id.articleFragment2);
                 NavHostFragment.findNavController(resFragment).navigate(R.id.infoFragment, bundle);
             }

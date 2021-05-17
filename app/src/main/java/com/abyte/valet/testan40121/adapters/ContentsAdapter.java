@@ -1,6 +1,5 @@
 package com.abyte.valet.testan40121.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.abyte.valet.testan40121.R;
 import com.abyte.valet.testan40121.model.server_model.ServerModel;
-import com.abyte.valet.testan40121.rest.RetrofitClient;
-
 import java.util.List;
 
 public class ContentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -33,10 +30,8 @@ public class ContentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private final List<ServerModel> contents;
     private final LayoutInflater inflater;
-    private final Context context;
 
     public ContentsAdapter(List<ServerModel> contents, Context context){
-        this.context = context;
         this.contents = contents;
         inflater = LayoutInflater.from(context);
     }

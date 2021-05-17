@@ -10,13 +10,10 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.view.View;
 
 import com.abyte.valet.testan40121.R;
-import com.abyte.valet.testan40121.fragments.PersonalFragment;
 import com.abyte.valet.testan40121.model.person.Person;
 import com.abyte.valet.testan40121.rest.RetrofitClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -26,8 +23,8 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     public static final String MSG_NAME = "Msg";
-    public static final String MSG_POS = "Position";
     public static final String MSG_ID_BACK_FRAGMENT = "ID";
+    public static final String BUNDLE_RECYCLER_LAYOUT = "Position";
     public static final int R_CODE = 1;
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -36,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
     };
 
     public static Person person;
+
+    public static void setPerson(Person person) {
+        MainActivity.person = person;
+    }
 
     @Override
     public void onBackPressed() {
@@ -48,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         verifyStoragePermissions(this);
-        person =  (Person) getIntent().getSerializableExtra(MSG_NAME);
         RetrofitClient.startDownload( this);
         RetrofitClient.downloadIcon(person);
         Toolbar toolbar = findViewById(R.id.my_tool_bar);

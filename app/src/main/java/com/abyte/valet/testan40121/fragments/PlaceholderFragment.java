@@ -19,6 +19,7 @@ import android.widget.EditText;
 
 import com.abyte.valet.testan40121.R;
 import com.abyte.valet.testan40121.activitys.MainActivity;
+import com.abyte.valet.testan40121.activitys.RegActivity;
 import com.abyte.valet.testan40121.db.PersonDB;
 import com.abyte.valet.testan40121.file_util.RealPathUtil;
 import com.abyte.valet.testan40121.model.person.Person;
@@ -67,7 +68,7 @@ public class PlaceholderFragment extends Fragment {
         if (type.equals("Регистрация")){ button.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_registration));
             button.setOnClickListener((v)->{
                 if (!login.getText().toString().isEmpty() &&
-                        !password.getText().toString().isEmpty()) {
+                        !password.getText().toString().isEmpty() && icon != null) {
                     StringBuilder builder = new StringBuilder();
 
                     byte[] a = digest.digest(password.getText().toString().getBytes());
@@ -80,29 +81,10 @@ public class PlaceholderFragment extends Fragment {
                     MultipartBody.Part part = MultipartBody.Part.createFormData("file", icon.getName(), body);
                     RequestBody bodyInfo = RequestBody.create(MediaType.parse("file/*"), icon.getName());
                     Log.i(TAG, "onCreateView: " + bodyInfo.toString());
-                    RetrofitClient.registrationUser(new Callback<Person>() {
-                        @Override
-                        public void onResponse(@NonNull Call<Person> call, @NonNull Response<Person> response) {
-                            getActivity().runOnUiThread(() -> {
-                                Person person = response.body();
-                                if (person != null) {
-                                    db.addPerson(person, icon.getName());
-                                    Intent i = new Intent(getActivity(), MainActivity.class);
-                                    i.putExtra(MainActivity.MSG_NAME, person);
-                                    RetrofitClient.startDownload( getActivity());
-                                    RetrofitClient.startDownloadByUserID(person.getId(), getActivity());
 
-                                    RetrofitClient.uploadIcon(body, part);
-                                    startActivityForResult(i, MainActivity.R_CODE);
+                    RegActivity.registration(getActivity(), db,
+                            bodyInfo, part, login.getText().toString(), builder.toString());
 
-                                }
-                            });
-                        }
-                        @Override
-                        public void onFailure(@NonNull Call<Person> call, @NonNull Throwable t) {
-                            Snackbar.make(login, Objects.requireNonNull(t.getMessage()), BaseTransientBottomBar.LENGTH_LONG).show();
-                        }
-                    }, login.getText().toString(), builder.toString(), bodyInfo, part);
                 } else {
                     Snackbar.make(login, "Введены некорректные данные", BaseTransientBottomBar.LENGTH_LONG).show();
                 }
@@ -121,7 +103,7 @@ public class PlaceholderFragment extends Fragment {
                         getActivity().runOnUiThread(() -> {
                             Person person = response.body();
                             Intent i = new Intent(getActivity(), MainActivity.class);
-                            i.putExtra(MainActivity.MSG_NAME, person);
+                            MainActivity.setPerson(person);
                             RetrofitClient.startDownload( getActivity());
                             RetrofitClient.startDownloadByUserID(person.getId(), getActivity());
                             startActivityForResult(i, MainActivity.R_CODE);
@@ -131,7 +113,7 @@ public class PlaceholderFragment extends Fragment {
 
                     @Override
                     public void onFailure(@NonNull Call<Person> call, @Nullable Throwable t) {
-                        Snackbar.make(login, t.getMessage(), BaseTransientBottomBar.LENGTH_LONG).show();
+                        Snackbar.make(login, "Произошла неизвестная ошибка", BaseTransientBottomBar.LENGTH_LONG).show();
                         Log.i(TAG, "onFailure: " + t.getMessage());
                     }
 
@@ -158,7 +140,7 @@ public class PlaceholderFragment extends Fragment {
                                 if (person != null) {
                                     db.addPerson(person, person.getPhotoName());
                                     Intent i = new Intent(getActivity(), MainActivity.class);
-                                    i.putExtra(MainActivity.MSG_NAME, person);
+                                    MainActivity.setPerson(person);
                                     RetrofitClient.startDownload( getActivity());
                                     RetrofitClient.startDownloadByUserID(person.getId(), getActivity());
                                     startActivityForResult(i, MainActivity.R_CODE);
@@ -169,7 +151,7 @@ public class PlaceholderFragment extends Fragment {
 
                         @Override
                         public void onFailure(@NonNull Call<Person> call, @NonNull Throwable t) {
-                            Snackbar.make(login, Objects.requireNonNull(t.getMessage()), BaseTransientBottomBar.LENGTH_LONG).show();
+                            Snackbar.make(login, "Неверный логин или пароль", BaseTransientBottomBar.LENGTH_LONG).show();
                         }
                     }, login.getText().toString(), builder.toString());
                     login.setText("");

@@ -5,10 +5,8 @@ import android.graphics.BitmapFactory;
 
 import androidx.annotation.NonNull;
 
-import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.lang.reflect.Field;
 
 public class Person implements Serializable {
     private final Long id;
