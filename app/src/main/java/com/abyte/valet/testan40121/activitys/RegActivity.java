@@ -17,8 +17,11 @@ import com.abyte.valet.testan40121.R;
 import com.abyte.valet.testan40121.adapters.SectionsPagerAdapter;
 import com.abyte.valet.testan40121.db.PersonDB;
 import com.abyte.valet.testan40121.fragments.PlaceholderFragment;
+import com.abyte.valet.testan40121.loading.LoadingDialog;
 import com.abyte.valet.testan40121.model.person.Person;
 import com.abyte.valet.testan40121.rest.RetrofitClient;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -32,6 +35,7 @@ public class RegActivity extends AppCompatActivity {
 
     public static final int REQUEST_ICON = 5;
     private ImageView imageViewIcon;
+    private LoadingDialog dialog;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -66,6 +70,8 @@ public class RegActivity extends AppCompatActivity {
         });
         mediator.attach();
 
+        dialog = new LoadingDialog(this);
+
     }
 
     public void setIcon(View v){
@@ -76,18 +82,19 @@ public class RegActivity extends AppCompatActivity {
     }
 
     public static void registration(Activity activity, PersonDB db, RequestBody body,
-                                    MultipartBody.Part part, String name, String password){
+                                    MultipartBody.Part part, String name, String password, View view){
         RetrofitClient.registrationUser(new Callback<Person>() {
             @Override
             public void onResponse(@NonNull Call<Person> call, @NonNull Response<Person> response) {
+                Person person = response.body();
                 activity.runOnUiThread(() -> {
-                    Person person = response.body();
                     if (person != null) {
                         db.addPerson(person, person.getPhotoName());
                         Intent i = new Intent(activity, MainActivity.class);
                         MainActivity.setPerson(person);
                         RetrofitClient.startDownload(activity);
                         RetrofitClient.startDownloadByUserID(person.getId(), activity);
+                        ((RegActivity) activity).getDialog().stopDialog();
                         activity.startActivityForResult(i, MainActivity.R_CODE);
 
                     }
@@ -96,9 +103,14 @@ public class RegActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<Person> call, @NonNull Throwable t) {
-
+                ((RegActivity) activity).getDialog().stopDialog();
+                Snackbar.make(view, "Произошла неизвестная ошибка", BaseTransientBottomBar.LENGTH_LONG).show();
             }
         }, name, password, body, part);
 
+    }
+
+    public LoadingDialog getDialog() {
+        return dialog;
     }
 }

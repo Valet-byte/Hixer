@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.abyte.valet.testan40121.R;
+import com.abyte.valet.testan40121.loading.LoadingDialog;
 import com.abyte.valet.testan40121.model.person.Person;
 import com.abyte.valet.testan40121.rest.RetrofitClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String MSG_ID_BACK_FRAGMENT = "ID";
     public static final String BUNDLE_RECYCLER_LAYOUT = "Position";
     public static final int R_CODE = 1;
+    private LoadingDialog dialog;
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static final String[] PERMISSIONS_STORAGE = {
@@ -53,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
         RetrofitClient.downloadIcon(person);
         Toolbar toolbar = findViewById(R.id.my_tool_bar);
 
+        dialog = new LoadingDialog(this);
+
         this.setSupportActionBar(toolbar);
         BottomNavigationView navigationView = findViewById(R.id.bottomNavigationView);
 
@@ -71,5 +75,9 @@ public class MainActivity extends AppCompatActivity {
                     REQUEST_EXTERNAL_STORAGE
             );
         }
+    }
+
+    public LoadingDialog getDialog() {
+        return dialog;
     }
 }

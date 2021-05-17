@@ -30,7 +30,6 @@ import com.google.android.material.snackbar.Snackbar;
 import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Objects;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -71,6 +70,8 @@ public class PlaceholderFragment extends Fragment {
                         !password.getText().toString().isEmpty() && icon != null) {
                     StringBuilder builder = new StringBuilder();
 
+                    ((RegActivity) getActivity()).getDialog().startDialog();
+
                     byte[] a = digest.digest(password.getText().toString().getBytes());
                     for (byte b : a) {
                         builder.append(b);
@@ -83,7 +84,7 @@ public class PlaceholderFragment extends Fragment {
                     Log.i(TAG, "onCreateView: " + bodyInfo.toString());
 
                     RegActivity.registration(getActivity(), db,
-                            bodyInfo, part, login.getText().toString(), builder.toString());
+                            bodyInfo, part, login.getText().toString(), builder.toString(), login);
 
                 } else {
                     Snackbar.make(login, "Введены некорректные данные", BaseTransientBottomBar.LENGTH_LONG).show();
@@ -97,22 +98,28 @@ public class PlaceholderFragment extends Fragment {
             if (p != null) {// если в бд что-то есть
                 Log.i("MyTag", p.toString());
 
+                ((RegActivity) getActivity()).getDialog().startDialog();
+
                 RetrofitClient.findUser(new Callback<Person>() {
                     @Override
                     public void onResponse(@NonNull Call<Person> call, @NonNull Response<Person> response) {
                         getActivity().runOnUiThread(() -> {
                             Person person = response.body();
-                            Intent i = new Intent(getActivity(), MainActivity.class);
-                            MainActivity.setPerson(person);
-                            RetrofitClient.startDownload( getActivity());
-                            RetrofitClient.startDownloadByUserID(person.getId(), getActivity());
-                            startActivityForResult(i, MainActivity.R_CODE);
+                            ((RegActivity) getActivity()).getDialog().stopDialog();
+                            if (person != null) {
+                                Intent i = new Intent(getActivity(), MainActivity.class);
+                                MainActivity.setPerson(person);
+                                RetrofitClient.startDownload(getActivity());
+                                RetrofitClient.startDownloadByUserID(person.getId(), getActivity());
+                                startActivityForResult(i, MainActivity.R_CODE);
+                            }
                         });
 
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<Person> call, @Nullable Throwable t) {
+                        ((RegActivity) getActivity()).getDialog().stopDialog();
                         Snackbar.make(login, "Произошла неизвестная ошибка", BaseTransientBottomBar.LENGTH_LONG).show();
                         Log.i(TAG, "onFailure: " + t.getMessage());
                     }
@@ -125,7 +132,7 @@ public class PlaceholderFragment extends Fragment {
                 if (!login.getText().toString().isEmpty() &&
                         !password.getText().toString().isEmpty()) {
                     StringBuilder builder = new StringBuilder();
-
+                    ((RegActivity) getActivity()).getDialog().startDialog();
                     byte[] a = digest.digest(password.getText().toString().getBytes());
                     for (byte b : a) {
                         builder.append(b);
@@ -137,6 +144,7 @@ public class PlaceholderFragment extends Fragment {
                         public void onResponse(@NonNull Call<Person> call, @NonNull Response<Person> response) {
                             getActivity().runOnUiThread(() -> {
                                 Person person = response.body();
+                                ((RegActivity) getActivity()).getDialog().stopDialog();
                                 if (person != null) {
                                     db.addPerson(person, person.getPhotoName());
                                     Intent i = new Intent(getActivity(), MainActivity.class);
@@ -151,6 +159,7 @@ public class PlaceholderFragment extends Fragment {
 
                         @Override
                         public void onFailure(@NonNull Call<Person> call, @NonNull Throwable t) {
+                            ((RegActivity) getActivity()).getDialog().stopDialog();
                             Snackbar.make(login, "Неверный логин или пароль", BaseTransientBottomBar.LENGTH_LONG).show();
                         }
                     }, login.getText().toString(), builder.toString());

@@ -5,11 +5,13 @@ import android.app.Activity;
 import android.util.Log;
 
 
+import com.abyte.valet.testan40121.activitys.MainActivity;
 import com.abyte.valet.testan40121.fragments.ArticleFragment;
 import com.abyte.valet.testan40121.fragments.IdeaFragment;
 import com.abyte.valet.testan40121.fragments.InfoFragment;
 import com.abyte.valet.testan40121.fragments.PersonalFragment;
 import com.abyte.valet.testan40121.fragments.ProjectsFragment;
+import com.abyte.valet.testan40121.loading.LoadingDialog;
 import com.abyte.valet.testan40121.model.person.Person;
 import com.abyte.valet.testan40121.model.server_model.ServerModel;
 
@@ -149,6 +151,10 @@ public class RetrofitClient {
 
     }
     public static void startDownloadByMainStats(String mainName){
+
+        ((MainActivity) activityRetroFit).getDialog().startDialog();
+        Log.i(TAG, "startDownloadByMainStats: dialog start");
+
         new Thread(()->{
             try {
                 boolean isNotEmpty = false;
@@ -169,6 +175,8 @@ public class RetrofitClient {
                         Log.i(TAG, "startDownloadByMainStats: invalidate");
                         Log.i(TAG, "startDownloadByMainStats: " + Arrays.toString(infoList.toArray()));
                         InfoFragment.invalidate();
+                        Log.i(TAG, "startDownloadByMainStats: dialog stop");
+                        ((MainActivity) activityRetroFit).getDialog().stopDialog();
                     });
 
                 }
@@ -179,6 +187,7 @@ public class RetrofitClient {
         }).start();
     }
     public static void dropInfoList(){
+        ((MainActivity) activityRetroFit).getDialog().stopDialog();
         infoList.clear();
     }
     public static void dropAll(){

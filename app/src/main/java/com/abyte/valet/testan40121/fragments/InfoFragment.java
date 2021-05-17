@@ -56,4 +56,10 @@ public class InfoFragment extends Fragment {
     public static void dropAdapter(){
         contentsAdapter = null;
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        RetrofitClient.dropInfoList();
+    }
 }
