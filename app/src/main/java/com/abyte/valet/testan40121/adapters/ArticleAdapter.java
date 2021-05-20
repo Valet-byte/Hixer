@@ -1,5 +1,6 @@
 package com.abyte.valet.testan40121.adapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -39,7 +40,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private static class MyViewHolder extends RecyclerView.ViewHolder{
 
         final ImageView imageView;
-        final TextView info, name;
+        final TextView info, name, tvID;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -47,6 +48,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             name = itemView.findViewById(R.id.tv_name);
             info = itemView.findViewById(R.id.tv_s);
             imageView = itemView.findViewById(R.id.img);
+            tvID = itemView.findViewById(R.id.tv_id);
         }
     }
 
@@ -58,15 +60,17 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return new MyViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ServerModel content = contents.get(position);
 
-            ((ArticleAdapter.MyViewHolder) holder).name.setText(content.getName());
+            ((MyViewHolder) holder).name.setText(content.getName());
             ((MyViewHolder) holder).info.setText(content.getInfo());
-            ((ArticleAdapter.MyViewHolder) holder).imageView.setImageBitmap(content.getBitmap());
+            ((MyViewHolder) holder).imageView.setImageBitmap(content.getBitmap());
+            ((MyViewHolder) holder).tvID.setText("id: " + content.getID());
 
-            ((ArticleAdapter.MyViewHolder) holder).imageView.setOnClickListener((View v) -> {
+            ((MyViewHolder) holder).imageView.setOnClickListener((View v) -> {
                 RetrofitClient.startDownloadByMainStats(content.getName());
 
                 Bundle bundle = new Bundle();

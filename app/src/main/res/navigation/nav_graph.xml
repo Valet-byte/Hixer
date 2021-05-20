@@ -63,4 +63,9 @@
         android:name="com.abyte.valet.testan40121.activitys.RegActivity"
         android:label="activity_reg"
         tools:layout="@layout/activity_reg" />
+    <fragment
+        android:id="@+id/findFragment"
+        android:name="com.abyte.valet.testan40121.fragments.FindFragment"
+        android:label="fragment_find"
+        tools:layout="@layout/fragment_find" />
 </navigation>

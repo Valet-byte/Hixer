@@ -71,6 +71,8 @@ public class PlaceholderFragment extends Fragment {
                     StringBuilder builder = new StringBuilder();
 
                     ((RegActivity) getActivity()).getDialog().startDialog();
+                    Log.i(TAG, "onCreateView: pass " + password.getText().toString());
+                    Log.i(TAG, "onCreateView: login " + login.getText().toString());
 
                     byte[] a = digest.digest(password.getText().toString().getBytes());
                     for (byte b : a) {
@@ -99,6 +101,7 @@ public class PlaceholderFragment extends Fragment {
                 Log.i("MyTag", p.toString());
 
                 ((RegActivity) getActivity()).getDialog().startDialog();
+
 
                 RetrofitClient.findUser(new Callback<Person>() {
                     @Override
@@ -131,6 +134,10 @@ public class PlaceholderFragment extends Fragment {
             button.setOnClickListener((v)->{
                 if (!login.getText().toString().isEmpty() &&
                         !password.getText().toString().isEmpty()) {
+
+                    Log.i(TAG, "onCreateView: pass " + password.getText().toString());
+                    Log.i(TAG, "onCreateView: login " + login.getText().toString());
+
                     StringBuilder builder = new StringBuilder();
                     ((RegActivity) getActivity()).getDialog().startDialog();
                     byte[] a = digest.digest(password.getText().toString().getBytes());
@@ -162,7 +169,7 @@ public class PlaceholderFragment extends Fragment {
                             ((RegActivity) getActivity()).getDialog().stopDialog();
                             Snackbar.make(login, "Неверный логин или пароль", BaseTransientBottomBar.LENGTH_LONG).show();
                         }
-                    }, login.getText().toString(), builder.toString());
+                    }, "\"" +login.getText().toString() + "\"", "\"" +builder.toString() + "\"");
                     login.setText("");
                     password.setText("");
                 } else {

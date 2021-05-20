@@ -5,13 +5,15 @@ import android.app.Activity;
 import android.util.Log;
 
 
+import androidx.annotation.Nullable;
+
 import com.abyte.valet.testan40121.activitys.MainActivity;
 import com.abyte.valet.testan40121.fragments.ArticleFragment;
+import com.abyte.valet.testan40121.fragments.FindFragment;
 import com.abyte.valet.testan40121.fragments.IdeaFragment;
 import com.abyte.valet.testan40121.fragments.InfoFragment;
 import com.abyte.valet.testan40121.fragments.PersonalFragment;
 import com.abyte.valet.testan40121.fragments.ProjectsFragment;
-import com.abyte.valet.testan40121.loading.LoadingDialog;
 import com.abyte.valet.testan40121.model.person.Person;
 import com.abyte.valet.testan40121.model.server_model.ServerModel;
 
@@ -31,7 +33,9 @@ import javax.net.ssl.X509TrustManager;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
+import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -40,13 +44,14 @@ import static com.abyte.valet.testan40121.activitys.AddActivity.TAG;
 public class RetrofitClient {
 
     private static ClientAPI clientAPI;
-    public static final List<ServerModel>projects =  Collections.synchronizedList(new LinkedList<>()),
+    public static final List<ServerModel> projects =  Collections.synchronizedList(new LinkedList<>()),
             ideas = Collections.synchronizedList(new LinkedList<>()),
             stats = Collections.synchronizedList(new LinkedList<>()),
             infoList = Collections.synchronizedList(new ArrayList<>()),
             projectsFromUser =  Collections.synchronizedList(new LinkedList<>()),
             ideasFromUser = Collections.synchronizedList(new LinkedList<>()),
-            statsFromUser = Collections.synchronizedList(new LinkedList<>());
+            statsFromUser = Collections.synchronizedList(new LinkedList<>()),
+            findList = Collections.synchronizedList(new LinkedList<>());
     @SuppressLint("StaticFieldLeak")
     public static Activity activityRetroFit;
     private RetrofitClient() { }
@@ -190,6 +195,40 @@ public class RetrofitClient {
         ((MainActivity) activityRetroFit).getDialog().stopDialog();
         infoList.clear();
     }
+
+    public static void getStatsByID(Long ID){
+        if (clientAPI == null) { dropAll();}
+        clientAPI.getStatsByID(ID).enqueue(new Callback<LinkedList<ServerModel>>() {
+            @Override
+            public void onResponse(@Nullable Call<LinkedList<ServerModel>> call, @Nullable Response<LinkedList<ServerModel>> response) {
+                new Thread(()->{
+                    clearFindList();
+                    findList.addAll(Objects.requireNonNull(Objects.requireNonNull(response).body()));
+
+                    synchronized (findList){
+                        for (ServerModel project : findList) {
+                            if (project.getPhoto() != null) {
+                                try {
+                                    project.setBitmap(Objects.requireNonNull(clientAPI.getPhoto(project.getPhoto()).execute().body()).byteStream());
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+                    activityRetroFit.runOnUiThread(FindFragment::invalidate);
+                }).start();
+
+                activityRetroFit.runOnUiThread(FindFragment::invalidate);
+            }
+
+            @Override
+            public void onFailure(@Nullable Call<LinkedList<ServerModel>> call, @Nullable Throwable t) {
+
+            }
+        });
+    }
+
     public static void dropAll(){
         clientAPI = getApiClient();
         projects.clear();
@@ -200,6 +239,12 @@ public class RetrofitClient {
         ideasFromUser.clear();
         statsFromUser.clear();
     }
+
+    public static void clearFindList(){
+        findList.clear();
+        InfoFragment.invalidate();
+    }
+
     public static void downloadIcon(Person person) {
         if (clientAPI == null) { dropAll(); }
         new Thread(()->{
@@ -251,7 +296,7 @@ public class RetrofitClient {
 
                 try {
                     Retrofit retrofit = new Retrofit.Builder()
-                            .baseUrl("https://192.168.1.111:8080")
+                            .baseUrl("https://188.225.46.21:8082")
                             .client(getUnsafeOkHttpClient().build())
                             .addConverterFactory(GsonConverterFactory.create())
                             .build();
@@ -266,9 +311,6 @@ public class RetrofitClient {
 
             return apiInterface;
         }
-
-
-
 
 }
 

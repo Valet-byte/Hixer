@@ -52,13 +52,11 @@ public class ArticleFragment extends Fragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        try {
-            recyclerView.setScrollingTouchSlop(savedInstanceState.getInt("Position"));
-        } catch (Exception ignored){
-
-        }
-
         super.onActivityCreated(savedInstanceState);
+        if(parcelable != null)
+        {
+            recyclerView.scrollToPosition(parcelable);
+        }
     }
 
     @Override

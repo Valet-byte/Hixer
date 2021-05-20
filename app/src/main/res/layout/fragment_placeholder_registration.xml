@@ -11,11 +11,14 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
         app:layout_constraintBottom_toTopOf="@+id/textInputLayout"
         android:layout_margin="10dp"
         app:passwordToggleContentDescription="description">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
@@ -29,6 +32,8 @@
         android:id="@+id/textInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
         android:layout_margin="10dp"
         app:layout_constraintBottom_toTopOf="@+id/appCompatButton"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,6 +41,7 @@
         app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/et_password"
@@ -51,11 +57,11 @@
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/iv_icon"
+            android:onClick="setIcon"
             android:src="@drawable/ic_click_by_set_icon"
             android:layout_gravity="center_horizontal"
             android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:onClick="setIcon"/>
+            android:layout_height="200dp"/>
         <ImageView
             android:src="@drawable/ic_fake_icon"
             android:layout_gravity="center_horizontal"

@@ -13,7 +13,7 @@ public class ServerModel implements Serializable {
     @SerializedName("type")
     @Expose
     private final Integer type;
-    @SerializedName("ID")
+    @SerializedName("id")
     @Expose
     private Long ID;
     @SerializedName("authorID")
@@ -57,6 +57,15 @@ public class ServerModel implements Serializable {
         this.info = info;
         this.authorID = authorID;
         this.photo = photo;
+    }
+
+    public ServerModel(Long ID, String name, String info, Long authorID, String photo, Integer type) {
+        this.type = type;
+        this.name = name;
+        this.info = info;
+        this.authorID = authorID;
+        this.photo = photo;
+        this.ID = ID;
     }
 
     public void setPosition(Integer position) {
@@ -108,10 +117,13 @@ public class ServerModel implements Serializable {
     @Override
     public String toString() {
         return "ServerModel{" +
-                "name='" + name + '\'' +
+                "type=" + type +
+                ", ID=" + ID +
+                ", authorID=" + authorID +
+                ", position=" + position +
                 ", info='" + info + '\'' +
-                ", author=" + authorID +
-                ", photo=" + photo +
+                ", name='" + name + '\'' +
+                ", photo='" + photo + '\'' +
                 '}';
     }
 

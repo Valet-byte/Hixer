@@ -77,7 +77,8 @@ public class AddActivity extends AppCompatActivity {
         } else {
             View view1 = views.get(views.size()-1);
             if (((EditText)view1.findViewById(R.id.et_name)).getText().toString().isEmpty()&&
-                    ((EditText)view1.findViewById(R.id.et_text)).getText().toString().isEmpty()){
+                    ((EditText)view1.findViewById(R.id.et_text)).getText().toString().isEmpty()&&
+                    files.isEmpty()){
                 Snackbar.make(v, "Заполните поля выше", BaseTransientBottomBar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }else {

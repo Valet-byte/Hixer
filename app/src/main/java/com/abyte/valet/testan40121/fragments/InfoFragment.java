@@ -22,9 +22,10 @@ public class InfoFragment extends Fragment {
 
     @SuppressLint("StaticFieldLeak")
     private static ContentsAdapter contentsAdapter;
+    private static Fragment fragment;
 
     public static void invalidate() {
-         contentsAdapter.notifyDataSetChanged();
+         if (contentsAdapter != null)contentsAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -34,6 +35,7 @@ public class InfoFragment extends Fragment {
         RetrofitClient.startDownloadByMainStats( getArguments().getString(MainActivity.MSG_NAME));
 
         TextView textLogo = view.findViewById(R.id.logo_text);
+        fragment = this;
 
         if(contentsAdapter == null) contentsAdapter = new ContentsAdapter(RetrofitClient.infoList, getActivity());
         RecyclerView recyclerView = view.findViewById(R.id.rv_list);
@@ -47,7 +49,11 @@ public class InfoFragment extends Fragment {
 
         btnBack.setOnClickListener((View v) -> {
             RetrofitClient.dropInfoList();
-            NavHostFragment.findNavController(this).navigate(ID);
+            if (ID != R.id.findFragment){
+                NavHostFragment.findNavController(this).navigateUp();
+            } else {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fm_container, new FindFragment()).commit();
+            }
         });
 
         return view;
@@ -61,5 +67,9 @@ public class InfoFragment extends Fragment {
     public void onStop() {
         super.onStop();
         RetrofitClient.dropInfoList();
+    }
+
+    public static Fragment getFragment() {
+        return fragment;
     }
 }

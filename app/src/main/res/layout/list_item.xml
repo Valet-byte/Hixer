@@ -1,30 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_margin="10dp"
     android:background="@drawable/ic_bacground"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_margin="7dp"
         android:layout_width="match_parent"
-        android:layout_height="650dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
             android:gravity="center"
             android:id="@+id/tv_name"
+            android:textSize="15sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textColor="@color/black"/>
 
         <ImageView
+            android:layout_margin="15dp"
+            android:maxHeight="250dp"
             android:id="@+id/img"
             android:layout_width="match_parent"
-            android:layout_height="500dp"/>
+            android:layout_height="wrap_content"/>
 
         <TextView
+            android:textSize="15sp"
             android:gravity="center"
             android:id="@+id/tv_s"
             android:textStyle="bold"
@@ -35,5 +39,16 @@
     </LinearLayout>
 
 
+    <TextView
+        android:id="@+id/tv_id"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="15dp"
+        android:textSize="15sp"
+        android:layout_gravity="right"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
-</LinearLayout>
+
+</FrameLayout>

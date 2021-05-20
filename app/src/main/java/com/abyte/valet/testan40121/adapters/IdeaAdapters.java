@@ -1,5 +1,6 @@
 package com.abyte.valet.testan40121.adapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -38,7 +39,7 @@ public class IdeaAdapters extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private static class MyViewHolder extends RecyclerView.ViewHolder{
 
         final ImageView logo;
-        final TextView name, info;
+        final TextView name, info, tvID;
         final View view;
 
         public MyViewHolder(@NonNull View itemView) {
@@ -47,6 +48,7 @@ public class IdeaAdapters extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             name = itemView.findViewById(R.id.tv_name);
             logo = itemView.findViewById(R.id.img);
             view = itemView;
+            tvID = itemView.findViewById(R.id.tv_id);
         }
     }
 
@@ -58,6 +60,7 @@ public class IdeaAdapters extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         return new MyViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
@@ -66,6 +69,7 @@ public class IdeaAdapters extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         ((MyViewHolder) holder).logo.setImageBitmap(content.getBitmap());
         ((MyViewHolder) holder).info.setText(content.getInfo());
         ((MyViewHolder) holder).name.setText(content.getName());
+        ((MyViewHolder) holder).tvID.setText("id: " + content.getID());
 
         ((MyViewHolder) holder).view.setOnClickListener((View v) -> {
             RetrofitClient.startDownloadByMainStats(content.getName());

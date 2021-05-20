@@ -65,6 +65,8 @@ public class IdeaFragment extends Fragment {
             parcelable = manager.findFirstVisibleItemPosition();
         });
 
+
+
         return view;
     }
     public static void dropAdapter() {if (ideaAdapters != null) ideaAdapters = null;}

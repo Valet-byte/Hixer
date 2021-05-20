@@ -1,6 +1,5 @@
 package com.abyte.valet.testan40121.adapters;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -12,12 +11,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.abyte.valet.testan40121.activitys.MainActivity;
 import com.abyte.valet.testan40121.R;
+import com.abyte.valet.testan40121.activitys.MainActivity;
+import com.abyte.valet.testan40121.fragments.InfoFragment;
 import com.abyte.valet.testan40121.model.server_model.ServerModel;
 import com.abyte.valet.testan40121.rest.RetrofitClient;
 
@@ -25,33 +26,30 @@ import java.util.List;
 
 import static com.abyte.valet.testan40121.activitys.AddActivity.TAG;
 
-public class ProjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class FindAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static class MyViewHolder extends RecyclerView.ViewHolder {
 
         final ImageView imageView;
-        final TextView info, name, tvID;
+        final TextView info, name;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             info = itemView.findViewById(R.id.tv_name);
             name = itemView.findViewById(R.id.tv_s);
             imageView = itemView.findViewById(R.id.img);
-            tvID = itemView.findViewById(R.id.tv_id);
         }
     }
 
     private final List<ServerModel> contents;
     private final LayoutInflater inflater;
-    private final Fragment resFragment;
     private final Context context;
     private final Integer ID;
 
-    public ProjectAdapter(Context context, List<ServerModel> contents, Fragment fragment, Integer idThisFragment) {
+    public FindAdapter(Context context, List<ServerModel> contents, Integer idThisFragment) {
         this.context = context;
         this.contents = contents;
         this.inflater = LayoutInflater.from(context);
-        this.resFragment = fragment;
         ID = idThisFragment;
     }
 
@@ -63,7 +61,6 @@ public class ProjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return new MyViewHolder(view);
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ServerModel content = contents.get(position);
@@ -71,24 +68,18 @@ public class ProjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ((MyViewHolder) holder).name.setText(content.getInfo());
         ((MyViewHolder) holder).info.setText(content.getName());
         ((MyViewHolder) holder).imageView.setImageBitmap(content.getBitmap());
-        ((MyViewHolder) holder).tvID.setText("id: " + content.getID());
 
         ((MyViewHolder) holder).imageView.setOnClickListener((View v) -> {
-            Log.i(TAG, "onBindViewHolder: " + content.toString());
+                    Log.i(TAG, "onBindViewHolder: " + content.toString());
                     Bundle bundle = new Bundle();
 
                     bundle.putString(MainActivity.MSG_NAME, content.getName());
                     bundle.putInt(MainActivity.MSG_ID_BACK_FRAGMENT, ID);
-
-                    NavHostFragment.findNavController(resFragment).navigate(R.id.infoFragment, bundle);
+                    InfoFragment fragment = new InfoFragment();
+                    fragment.setArguments(bundle);
+            ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction().replace(R.id.fm_container, fragment).commit();
                 }
         );
-
-
-
-        if (position == contents.size() - 1) {
-            RetrofitClient.startDownload((Activity) context);
-        }
 
     }
 

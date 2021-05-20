@@ -92,7 +92,6 @@ public class RegActivity extends AppCompatActivity {
                         db.addPerson(person, person.getPhotoName());
                         Intent i = new Intent(activity, MainActivity.class);
                         MainActivity.setPerson(person);
-                        RetrofitClient.startDownload(activity);
                         RetrofitClient.startDownloadByUserID(person.getId(), activity);
                         ((RegActivity) activity).getDialog().stopDialog();
                         activity.startActivityForResult(i, MainActivity.R_CODE);

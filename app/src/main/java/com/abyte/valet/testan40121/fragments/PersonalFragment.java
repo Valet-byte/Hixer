@@ -49,7 +49,6 @@ public class PersonalFragment extends Fragment {
         contents.add(RetrofitClient.statsFromUser);
         if (adapter == null)
             adapter = new PersonContentAdapters(contents, getActivity(), this, R.id.personalFragment2);
-        else adapter.updateResFragment(this);
         login.setText(MainActivity.person.getName());
         view.findViewById(R.id.btn_out).setOnClickListener(v -> onSaveAndStop());
 

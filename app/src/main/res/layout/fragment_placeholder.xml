@@ -9,6 +9,8 @@
     tools:context=".fragments.PlaceholderFragment">
 
     <com.google.android.material.textfield.TextInputLayout
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/textInputLayout"
@@ -16,6 +18,7 @@
         app:passwordToggleContentDescription="description">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
@@ -26,6 +29,8 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
         android:id="@+id/textInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,6 +41,7 @@
         app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/et_password"
