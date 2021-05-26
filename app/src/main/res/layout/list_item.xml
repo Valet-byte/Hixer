@@ -25,7 +25,7 @@
             android:maxHeight="250dp"
             android:id="@+id/img"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="325dp"/>
 
         <TextView
             android:textSize="15sp"

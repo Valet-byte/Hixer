@@ -9,6 +9,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -18,7 +19,6 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.abyte.valet.testan40121.R;
-import com.abyte.valet.testan40121.fragments.FindFragment;
 import com.abyte.valet.testan40121.loading.LoadingDialog;
 import com.abyte.valet.testan40121.model.person.Person;
 import com.abyte.valet.testan40121.rest.RetrofitClient;
@@ -26,12 +26,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Objects;
 
+@SuppressLint("StaticFieldLeak")
 public class MainActivity extends AppCompatActivity {
     public static final String MSG_NAME = "Msg";
     public static final String MSG_ID_BACK_FRAGMENT = "ID";
     public static final String BUNDLE_RECYCLER_LAYOUT = "Position";
     public static final int R_CODE = 1;
-    private LoadingDialog dialog;
+    private static LoadingDialog dialog;
+    private Integer id;
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static final String[] PERMISSIONS_STORAGE = {
@@ -87,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 try {
-                    RetrofitClient.getStatsByID(Long.decode(editable.toString()));
+                    RetrofitClient.getStatsByID(editable.toString());
                 } catch (NumberFormatException ignore){
                     RetrofitClient.clearFindList();
                 }
@@ -98,7 +100,10 @@ public class MainActivity extends AppCompatActivity {
         text.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 navigationView.setVisibility(View.GONE);
-                getSupportFragmentManager().beginTransaction().replace(R.id.fm_container, new FindFragment()).commit();
+                id = NavHostFragment.findNavController(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment)))
+                        .getGraph().getId();
+                NavHostFragment.findNavController(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment)))
+                .navigate(R.id.findFragment);
             }
             else {
                 text.setText("");
@@ -117,18 +122,13 @@ public class MainActivity extends AppCompatActivity {
             );
         }
     }
-    public LoadingDialog getDialog() {
+    public static LoadingDialog getDialog() {
         return dialog;
     }
 
     public void stopSearch(View view){
         navigationView.setVisibility(View.VISIBLE);
         text.clearFocus();
-        try {
-            getSupportFragmentManager().beginTransaction().detach(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.fm_container))).commit();
-        } catch (Exception ignore){
-
-        }
-
+        if (id != null) NavHostFragment.findNavController(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment))).navigate(id);
     }
 }

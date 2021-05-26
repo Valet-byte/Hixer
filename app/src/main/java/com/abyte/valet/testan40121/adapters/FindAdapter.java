@@ -1,6 +1,6 @@
 package com.abyte.valet.testan40121.adapters;
 
-import android.app.Activity;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,17 +12,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.abyte.valet.testan40121.R;
 import com.abyte.valet.testan40121.activitys.MainActivity;
-import com.abyte.valet.testan40121.fragments.InfoFragment;
 import com.abyte.valet.testan40121.model.server_model.ServerModel;
-import com.abyte.valet.testan40121.rest.RetrofitClient;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.abyte.valet.testan40121.activitys.AddActivity.TAG;
 
@@ -72,12 +70,10 @@ public class FindAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         ((MyViewHolder) holder).imageView.setOnClickListener((View v) -> {
                     Log.i(TAG, "onBindViewHolder: " + content.toString());
                     Bundle bundle = new Bundle();
-
                     bundle.putString(MainActivity.MSG_NAME, content.getName());
                     bundle.putInt(MainActivity.MSG_ID_BACK_FRAGMENT, ID);
-                    InfoFragment fragment = new InfoFragment();
-                    fragment.setArguments(bundle);
-            ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction().replace(R.id.fm_container, fragment).commit();
+            NavHostFragment.findNavController(Objects.requireNonNull(((AppCompatActivity)context).getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment)))
+                    .navigate(R.id.infoFragment, bundle);
                 }
         );
 

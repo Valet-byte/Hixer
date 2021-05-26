@@ -45,15 +45,9 @@ public class InfoFragment extends Fragment {
 
         ImageView btnBack = view.findViewById(R.id.btn_back_add);
 
-        int ID = getArguments().getInt(MainActivity.MSG_ID_BACK_FRAGMENT);
-
         btnBack.setOnClickListener((View v) -> {
             RetrofitClient.dropInfoList();
-            if (ID != R.id.findFragment){
                 NavHostFragment.findNavController(this).navigateUp();
-            } else {
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fm_container, new FindFragment()).commit();
-            }
         });
 
         return view;

@@ -157,7 +157,7 @@ public class RetrofitClient {
     }
     public static void startDownloadByMainStats(String mainName){
 
-        ((MainActivity) activityRetroFit).getDialog().startDialog();
+        MainActivity.getDialog().startDialog();
         Log.i(TAG, "startDownloadByMainStats: dialog start");
 
         new Thread(()->{
@@ -181,7 +181,7 @@ public class RetrofitClient {
                         Log.i(TAG, "startDownloadByMainStats: " + Arrays.toString(infoList.toArray()));
                         InfoFragment.invalidate();
                         Log.i(TAG, "startDownloadByMainStats: dialog stop");
-                        ((MainActivity) activityRetroFit).getDialog().stopDialog();
+                        MainActivity.getDialog().stopDialog();
                     });
 
                 }
@@ -192,11 +192,11 @@ public class RetrofitClient {
         }).start();
     }
     public static void dropInfoList(){
-        ((MainActivity) activityRetroFit).getDialog().stopDialog();
+        MainActivity.getDialog().stopDialog();
         infoList.clear();
     }
 
-    public static void getStatsByID(Long ID){
+    public static void getStatsByID(String ID){
         if (clientAPI == null) { dropAll();}
         clientAPI.getStatsByID(ID).enqueue(new Callback<LinkedList<ServerModel>>() {
             @Override

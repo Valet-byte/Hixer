@@ -55,11 +55,8 @@ public interface ClientAPI {
                          @Part("pass") String pass,
                          @Part("icon") RequestBody info,
                          @Part MultipartBody.Part file);
-    @Multipart
-    @POST("./uploadIcon")
-    Call<Void> uploadIcon(@Part("description") RequestBody info, @Part MultipartBody.Part icon);
 
     @FormUrlEncoded
     @POST("./getStatsByID")
-    Call<LinkedList<ServerModel>> getStatsByID(@Field("ID") Long ID);
+    Call<LinkedList<ServerModel>> getStatsByID(@Field("ID") String ID);
 }

@@ -30,6 +30,9 @@
         <action
             android:id="@+id/action_infoFragment_to_personalFragment2"
             app:destination="@id/personalFragment2" />
+        <action
+            android:id="@+id/action_infoFragment_to_findFragment"
+            app:destination="@id/findFragment" />
     </fragment>
     <fragment
         android:id="@+id/articleFragment2"
@@ -58,14 +61,13 @@
             android:id="@+id/action_personalFragment2_to_infoFragment"
             app:destination="@id/infoFragment" />
     </fragment>
-    <activity
-        android:id="@+id/regActivity"
-        android:name="com.abyte.valet.testan40121.activitys.RegActivity"
-        android:label="activity_reg"
-        tools:layout="@layout/activity_reg" />
     <fragment
         android:id="@+id/findFragment"
         android:name="com.abyte.valet.testan40121.fragments.FindFragment"
         android:label="fragment_find"
-        tools:layout="@layout/fragment_find" />
+        tools:layout="@layout/fragment_find" >
+        <action
+            android:id="@+id/action_findFragment_to_infoFragment"
+            app:destination="@id/infoFragment" />
+    </fragment>
 </navigation>
