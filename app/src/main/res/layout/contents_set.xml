@@ -20,6 +20,8 @@
 
         <ImageView
             android:id="@+id/img_info"
+            android:maxHeight="200dp"
+            android:adjustViewBounds="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

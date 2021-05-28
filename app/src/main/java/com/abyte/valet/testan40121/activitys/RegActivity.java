@@ -3,10 +3,13 @@ package com.abyte.valet.testan40121.activitys;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,6 +39,10 @@ public class RegActivity extends AppCompatActivity {
     public static final int REQUEST_ICON = 5;
     private ImageView imageViewIcon;
     private LoadingDialog dialog;
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static final String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -53,7 +60,7 @@ public class RegActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reg);
-
+        verifyStoragePermissions(this);
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this);
         ViewPager2 viewPager = findViewById(R.id.view_pager);
         TabLayout tabLayout = findViewById(R.id.tabs);
@@ -92,7 +99,7 @@ public class RegActivity extends AppCompatActivity {
                         db.addPerson(person, person.getPhotoName());
                         Intent i = new Intent(activity, MainActivity.class);
                         MainActivity.setPerson(person);
-                        RetrofitClient.startDownloadByUserID(person.getId(), activity);
+                        RetrofitClient.startDownloadByUserID(person.getId());
                         ((RegActivity) activity).getDialog().stopDialog();
                         activity.startActivityForResult(i, MainActivity.R_CODE);
 
@@ -111,5 +118,16 @@ public class RegActivity extends AppCompatActivity {
 
     public LoadingDialog getDialog() {
         return dialog;
+    }
+    public static void verifyStoragePermissions(Activity activity) {
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
     }
 }

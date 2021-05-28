@@ -2,6 +2,7 @@ package com.abyte.valet.testan40121.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -35,7 +36,7 @@ public class PersonalFragment extends Fragment {
 
     private static PersonContentAdapters adapter;
     private static Integer typeContent = 0;
-
+    private static ImageView imageView;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -60,6 +61,7 @@ public class PersonalFragment extends Fragment {
 
 
         ImageView icon = view.findViewById(R.id.iv_icon);
+        imageView = icon;
         icon.setImageBitmap(MainActivity.person.getPhoto());
 
         TabLayout tabLayout = view.findViewById(R.id.tab);
@@ -111,4 +113,5 @@ public class PersonalFragment extends Fragment {
     public static void dropAdapter() {
         if (adapter != null) adapter = null;
     }
+    public static synchronized void updateIcon(Bitmap bitmap){if (bitmap != null && imageView != null)imageView.setImageBitmap(bitmap);}
 }

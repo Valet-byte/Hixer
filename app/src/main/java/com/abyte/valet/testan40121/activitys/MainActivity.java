@@ -13,6 +13,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -28,17 +29,13 @@ import java.util.Objects;
 
 @SuppressLint("StaticFieldLeak")
 public class MainActivity extends AppCompatActivity {
+    private static Handler handler;
     public static final String MSG_NAME = "Msg";
     public static final String MSG_ID_BACK_FRAGMENT = "ID";
-    public static final String BUNDLE_RECYCLER_LAYOUT = "Position";
     public static final int R_CODE = 1;
     private static LoadingDialog dialog;
     private Integer id;
 
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static final String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE
-    };
 
     private BottomNavigationView navigationView;
 
@@ -59,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        verifyStoragePermissions(this);
-        RetrofitClient.startDownload(this);
+        handler = new Handler();
+        RetrofitClient.startDownload();
         RetrofitClient.downloadIcon(person);
         Toolbar toolbar = findViewById(R.id.my_tool_bar);
 
@@ -111,17 +108,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public static void verifyStoragePermissions(Activity activity) {
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    activity,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
-        }
-    }
     public static LoadingDialog getDialog() {
         return dialog;
     }
@@ -130,5 +116,9 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setVisibility(View.VISIBLE);
         text.clearFocus();
         if (id != null) NavHostFragment.findNavController(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment))).navigate(id);
+    }
+
+    public static synchronized void runOnMainThread(Runnable action){
+        if (action != null) handler.post(action);
     }
 }

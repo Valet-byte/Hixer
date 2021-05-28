@@ -112,8 +112,8 @@ public class PlaceholderFragment extends Fragment {
                             if (person != null) {
                                 Intent i = new Intent(getActivity(), MainActivity.class);
                                 MainActivity.setPerson(person);
-                                RetrofitClient.startDownload(getActivity());
-                                RetrofitClient.startDownloadByUserID(person.getId(), getActivity());
+                                RetrofitClient.startDownload();
+                                RetrofitClient.startDownloadByUserID(person.getId());
                                 startActivityForResult(i, MainActivity.R_CODE);
                             }
                         });
@@ -156,8 +156,8 @@ public class PlaceholderFragment extends Fragment {
                                     db.addPerson(person, person.getPhotoName());
                                     Intent i = new Intent(getActivity(), MainActivity.class);
                                     MainActivity.setPerson(person);
-                                    RetrofitClient.startDownload( getActivity());
-                                    RetrofitClient.startDownloadByUserID(person.getId(), getActivity());
+                                    RetrofitClient.startDownload();
+                                    RetrofitClient.startDownloadByUserID(person.getId());
                                     startActivityForResult(i, MainActivity.R_CODE);
 
                                 }

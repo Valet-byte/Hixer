@@ -46,19 +46,20 @@ public class ContentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (position != contents.size()) {
+            ServerModel content = contents.get(position);
+            ((MyHolder) holder).tvTable.setText(content.getName());
+            ((MyHolder) holder).textView.setText(content.getInfo());
 
-        ServerModel content = contents.get(position);
-
-        ((MyHolder)holder).tvTable.setText(content.getName());
-        ((MyHolder)holder).textView.setText(content.getInfo());
-
-        if (content.getBitmap() != null) ((MyHolder) holder).imageView.setImageBitmap(content.getBitmap());
+            if (content.getBitmap() != null)
+                ((MyHolder) holder).imageView.setImageBitmap(content.getBitmap());
+        }
 
     }
 
     @Override
     public int getItemCount() {
-        return contents.size();
+        return contents.size() + 1;
     }
 
 

@@ -112,7 +112,8 @@ public class AddActivity extends AppCompatActivity {
     }
 
     public void uploadToServer(View v) {
-        if (views.size() >= 3){
+        if (views.size() >= 3 && files.size() >= 1){
+            RetrofitClient.clearPersonStats();
             RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), MainActivity.person.toString());
             ArrayList<MultipartBody.Part> parts = new ArrayList<>();
             String name;
@@ -152,7 +153,7 @@ public class AddActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(@Nullable Call<Void> call, @NonNull Response<Void> response) {
                     Log.i(TAG, "onResponse: " + response.code());
-                    RetrofitClient.startDownloadByUserID(MainActivity.person.getId(), AddActivity.this);
+                    RetrofitClient.startDownloadByUserID(MainActivity.person.getId());
                 }
 
                 @Override
@@ -162,7 +163,7 @@ public class AddActivity extends AppCompatActivity {
             }, requestBody, modelsArr, partArr)).start();
             onBackPressed();
         } else {
-            Snackbar.make(v, "Слишком малое количество глав", BaseTransientBottomBar.LENGTH_LONG)
+            Snackbar.make(v, "Слишком малое количество глав или нет ни одной иллюстрации", BaseTransientBottomBar.LENGTH_LONG)
                     .setAction("Action", null).show();
         }
 

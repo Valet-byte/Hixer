@@ -1,7 +1,6 @@
 package com.abyte.valet.testan40121.adapters;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -27,10 +26,8 @@ public class IdeaAdapters extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private final List<ServerModel> contents;
     private final LayoutInflater inflater;
     private final Fragment resFragment;
-    private final Context context;
 
     public IdeaAdapters(Context context, List<ServerModel> contents, Fragment fragment) {
-        this.context = context;
         this.contents = contents;
         this.inflater = LayoutInflater.from(context);
         this.resFragment = fragment;
@@ -81,7 +78,7 @@ public class IdeaAdapters extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         });
         if (position == contents.size() - 1){
-            RetrofitClient.startDownload((Activity) context);
+            RetrofitClient.startDownload();
         }
 
     }

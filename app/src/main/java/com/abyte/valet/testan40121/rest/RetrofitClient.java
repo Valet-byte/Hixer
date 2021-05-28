@@ -1,9 +1,7 @@
 package com.abyte.valet.testan40121.rest;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.util.Log;
-
 
 import androidx.annotation.Nullable;
 
@@ -52,8 +50,6 @@ public class RetrofitClient {
             ideasFromUser = Collections.synchronizedList(new LinkedList<>()),
             statsFromUser = Collections.synchronizedList(new LinkedList<>()),
             findList = Collections.synchronizedList(new LinkedList<>());
-    @SuppressLint("StaticFieldLeak")
-    public static Activity activityRetroFit;
     private RetrofitClient() { }
 
     public static void registrationUser(Callback<Person> callback,
@@ -77,9 +73,9 @@ public class RetrofitClient {
         clientAPI.uploadContents(description, models, parts).enqueue(callback);}
 
 
-    public static void startDownload( Activity activity) {
+    public static void startDownload() {
         if (clientAPI == null) { dropAll(); }
-        activityRetroFit = activity;
+
         new Thread(()->{
             try {
                 ideas.addAll(Objects.requireNonNull(clientAPI.getModel(2).execute().body()));
@@ -104,9 +100,11 @@ public class RetrofitClient {
                     }
                 }
 
-                activityRetroFit.runOnUiThread(ProjectsFragment::invalidate);
-                activityRetroFit.runOnUiThread(IdeaFragment::invalidate);
-                activityRetroFit.runOnUiThread(ArticleFragment::invalidate);
+                MainActivity.runOnMainThread(() -> {
+                    IdeaFragment.invalidate();
+                    ProjectsFragment.invalidate();
+                    ArticleFragment.invalidate();
+                });
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -115,8 +113,7 @@ public class RetrofitClient {
         }).start();
 
     }
-    public static void startDownloadByUserID(Long id, Activity activity){
-        activityRetroFit = activity;
+    public static void startDownloadByUserID(Long id){
         if (clientAPI == null) { dropAll(); }
         new Thread(()->{
             try {
@@ -143,9 +140,7 @@ public class RetrofitClient {
                 }
 
 
-                activityRetroFit.runOnUiThread(PersonalFragment::invalidate);
-                activityRetroFit.runOnUiThread(PersonalFragment::invalidate);
-                activityRetroFit.runOnUiThread(PersonalFragment::invalidate);
+                MainActivity.runOnMainThread(PersonalFragment::invalidate);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -176,7 +171,7 @@ public class RetrofitClient {
                                 serverModel.setBitmap(Objects.requireNonNull(clientAPI.getPhoto(serverModel.getPhoto()).execute().body()).byteStream());
                         }
                     }
-                    activityRetroFit.runOnUiThread(() -> {
+                    MainActivity.runOnMainThread(() -> {
                         Log.i(TAG, "startDownloadByMainStats: invalidate");
                         Log.i(TAG, "startDownloadByMainStats: " + Arrays.toString(infoList.toArray()));
                         InfoFragment.invalidate();
@@ -216,10 +211,10 @@ public class RetrofitClient {
                             }
                         }
                     }
-                    activityRetroFit.runOnUiThread(FindFragment::invalidate);
+                    MainActivity.runOnMainThread(FindFragment::invalidate);
                 }).start();
 
-                activityRetroFit.runOnUiThread(FindFragment::invalidate);
+                MainActivity.runOnMainThread(FindFragment::invalidate);
             }
 
             @Override
@@ -245,11 +240,18 @@ public class RetrofitClient {
         InfoFragment.invalidate();
     }
 
+    public static void clearPersonStats(){
+        projectsFromUser.clear();
+        ideasFromUser.clear();
+        statsFromUser.clear();
+    }
+
     public static void downloadIcon(Person person) {
         if (clientAPI == null) { dropAll(); }
         new Thread(()->{
             try {
                 person.setPhoto(Objects.requireNonNull(clientAPI.getIcon(person.getPhotoName()).execute().body()).byteStream());
+                MainActivity.runOnMainThread(() -> PersonalFragment.updateIcon(person.getPhoto()));
             } catch (IOException e) {
                 e.printStackTrace();
             }

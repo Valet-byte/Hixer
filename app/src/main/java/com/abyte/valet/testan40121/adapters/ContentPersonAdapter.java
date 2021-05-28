@@ -32,8 +32,8 @@ public class ContentPersonAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            info = itemView.findViewById(R.id.tv_s);
-            name = itemView.findViewById(R.id.tv_name);
+            info = itemView.findViewById(R.id.tv_name);
+            name = itemView.findViewById(R.id.tv_s);
             imageView = itemView.findViewById(R.id.img);
             tvID = itemView.findViewById(R.id.tv_id);
         }
